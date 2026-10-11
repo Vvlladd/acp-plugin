@@ -1,7 +1,7 @@
 # Free preview: final verification
 
-The plugin source is public. A separate compiled runtime is required. This checklist records
-what the maintainer must observe before offering the runtime download and tagging a release.
+The plugin and compiled runtime preview are public. This checklist records the remaining
+checks before describing a release as broadly accepted or notarized.
 It contains no paid-pilot or subscription setup.
 
 - [ ] On a test Mac, record macOS, architecture, host CLI versions and package hashes.
@@ -25,8 +25,7 @@ It contains no paid-pilot or subscription setup.
       Complete chat transfer is not promised.
 - [ ] Finish work before changing runtime versions. Test returning to the previous version
       while preserving local history. Do not run two daemon owners for one repository.
-- [ ] Record results, limitations and supported platforms. Only then publish the runtime asset,
-      replace the installation availability statement and tag the plugin release.
+- [ ] Record results, limitations and supported platforms. Use these observations for the next accepted release and supported-platform claims.
 
 The initial runtime candidate is Apple Silicon only, even if its analyzer also contains Intel code.
 An official marketplace directory submission is optional and separate from this GitHub catalog.

@@ -1,0 +1,12 @@
+{
+  "releaseId": "0.1.0-preview.20261011",
+  "tag": "runtime-v0.1.0-preview.20261011",
+  "asset": "ACP-runtime-0.1.0-preview.20261011-macos-arm64.zip",
+  "downloadUrl": "https://github.com/Vvlladd/acp-plugin/releases/download/runtime-v0.1.0-preview.20261011/ACP-runtime-0.1.0-preview.20261011-macos-arm64.zip",
+  "sha256": "fb5f09c8c3d20216f0c9e6d9d23b761e6e17de1cd64b42284e9d088ed4ec6195",
+  "architecture": "arm64",
+  "minimumMacOS": "26",
+  "testedMacOS": "27.0",
+  "signing": "ad-hoc",
+  "notarized": false
+}

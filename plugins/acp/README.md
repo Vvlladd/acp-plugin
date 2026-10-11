@@ -20,3 +20,6 @@ For Claude Code versions supporting one-step marketplace installs:
 ```
 
 This installs the plugin only; the separate compiled runtime is still required.
+
+Install the required daemon using the [public installation guide](https://github.com/Vvlladd/acp-plugin/blob/main/docs/INSTALLATION.md).
+The free runtime preview contains no Mac app; its current signing limitations are stated there.

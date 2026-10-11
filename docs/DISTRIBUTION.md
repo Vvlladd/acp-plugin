@@ -9,11 +9,11 @@
 
 The MIT notice is included at both repository and plugin root so a host copying only the plugin
 retains it. It grants rights to these package files; it does not license an absent engine binary,
-the private source repository, provider software or dependencies of a separate runtime package.
+the private source repository, provider software or dependencies of a separate runtime package. See the [download and installation guide](INSTALLATION.md).
 
-The planned free runtime is free of ACP software charges for its defined free capabilities.
+The compiled preview runtime is free of ACP software charges for its defined free capabilities.
 Model calls still consume the user's provider allowance or paid usage. No free hosted inference
-is included. Final binary permissions and redistribution terms must accompany the actual release.
+is included. The [runtime terms](RUNTIME-TERMS.md) accompany the release.
 
 A marketplace is a discovery/update channel for the plugin. It does not need the Rust source and
 does not itself supply the runtime in this package. Users install a trusted compiled daemon,

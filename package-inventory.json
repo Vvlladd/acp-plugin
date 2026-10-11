@@ -14,6 +14,9 @@
     "docs/FINAL-VERIFICATION.md",
     "docs/INSTALLATION.md",
     "docs/RELEASING.md",
+    "docs/RUNTIME-TERMS.md",
+    "docs/SIGNING.md",
+    "docs/runtime-release.json",
     "package-inventory.json",
     "plugins/acp/.claude-plugin/plugin.json",
     "plugins/acp/.codex-plugin/plugin.json",
@@ -22,6 +25,7 @@
     "plugins/acp/commands/acp.md",
     "plugins/acp/plugin.json",
     "plugins/acp/skills/acp-control-plane/SKILL.md",
-    "scripts/check_package.py"
+    "scripts/check_package.py",
+    "scripts/install-runtime.sh"
   ]
 }

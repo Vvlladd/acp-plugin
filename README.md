@@ -5,13 +5,14 @@ inspect their evidence and return the integration decision to you. The optional 
 the same local task and history.
 
 **This repository contains the free MIT plugin, not the Rust daemon source.** The plugin requires
-a separately installed `acp` executable. The engine remains private and is intended for a free
-compiled distribution under separate terms. Provider access and usage come from your own accounts.
+a separately installed `acp` executable. The engine remains private and is available as a free
+compiled preview under separate terms. Provider access and usage come from your own accounts.
 
-**Release status:** the MIT plugin is available for preview in this public repository.
-The compiled runtime is awaiting the maintainer’s final verification; there is no public runtime
-download yet. Existing pilot users can validate it with a
-compatible trusted runtime. Installing the plugin alone does not install ACP or start workers.
+**Release status:** the free compiled daemon/helper is available as an
+[Apple Silicon preview](https://github.com/Vvlladd/acp-plugin/releases/tag/runtime-v0.1.0-preview.20261011).
+The Mac app is optional and is not included. This preview is ad hoc signed and **not notarized**;
+macOS may block downloaded binaries. Read the [installation guide](docs/INSTALLATION.md) and
+[signing status](docs/SIGNING.md) before installing.
 
 [Install](docs/INSTALLATION.md) · [Architecture](#architecture) ·
 [Compatibility](docs/COMPATIBILITY.md) · [Roadmap](ROADMAP.md) ·
@@ -143,6 +144,7 @@ acp-plugin/
 │   ├── commands/acp.md
 │   └── LICENSE                     # Retained when a host copies the plugin
 ├── docs/                            # Install, compatibility and release guidance
+├── scripts/install-runtime.sh       # Explicit download + checksum-verified install
 ├── scripts/check_package.py         # Local package checks; no downloads
 ├── CONTRIBUTING.md
 └── LICENSE                          # MIT for this repository's files

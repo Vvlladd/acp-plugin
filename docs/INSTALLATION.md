@@ -1,48 +1,62 @@
-# Install the plugin and its runtime dependency
+# Install the free daemon and plugin
 
-## Current availability
+The [compiled runtime preview](https://github.com/Vvlladd/acp-plugin/releases/tag/runtime-v0.1.0-preview.20261011)
+is available for Apple Silicon Macs running macOS 26 or later. Local checks ran on macOS 27;
+second-machine and broader OS acceptance remain pending. It includes the daemon/CLI and matching
+analyzer. **The Mac app and Rust toolchain are not required.** Provider access is your own.
 
-The plugin package is publicly available for preview. This repository does **not** yet offer a public
-runtime download. Until a release exists, use only a compatible runtime supplied through an agreed
-pilot. There is intentionally no placeholder download URL or installer that fetches an unknown binary.
+**This preview is not Developer ID signed or notarized.** macOS may block downloaded executables.
+The installer preserves quarantine and does not bypass Gatekeeper. If execution is blocked, stop
+and use a later signed/notarized release. See [signing status](SIGNING.md).
 
-You need a local Git repository, a supported macOS runtime, a shell-capable Claude Code or Codex
-host, and authenticated provider CLIs for the workers you select. A browser-only chat cannot run
-this local workflow. See [compatibility](COMPATIBILITY.md).
+## 1. Download and install the compiled runtime
 
-## 1. Install a trusted compiled runtime
-
-Use the matching `acp` and `acp-swift-checks` from the same reviewed package, with its binary terms,
-notices, checksums and platform instructions. Keep the analyzer beside the **resolved executable**,
-including when `acp` is reached through a symlink. Keep executable permissions and the supplied
-SwiftSyntax notice. Put the trusted install directory on PATH; do not install it inside a customer
-checkout. No Rust build or private source access is required.
-
-Follow the release's signing and quarantine instructions. This guide does not authorize bypassing
-OS protection. A public release must supply a complete, tested installation path first.
-
-Verify without starting workers, substituting your actual repository path:
-
-```sh
-command -v acp
-acp --version
-acp doctor --repo /absolute/path/to/your/repository
-```
-
-Resolve reported incompatibilities before delegation. Doctor is a readiness probe, not a complete
-provider acceptance test. Provider authentication stays in the provider's own CLI.
-
-## 2. Load the plugin in your host
-
-Clone the public repository, then validate the package:
+Clone the MIT plugin repository and inspect the installer, then run it:
 
 ```sh
 git clone https://github.com/Vvlladd/acp-plugin.git
 cd acp-plugin
-python3 scripts/check_package.py
+less scripts/install-runtime.sh
+bash scripts/install-runtime.sh
 ```
 
-For **Claude Code**, add this repository’s catalog and install the plugin:
+The installer downloads the exact release asset over HTTPS, checks a pinned SHA-256 before
+extraction, validates all payload checksums and copies the complete package into a new version
+folder. It does not execute downloaded binaries, alter host settings, start workers or replace
+another installation. It uses built-in macOS tools; no Python or Cargo is needed for installation.
+Read the [free runtime terms](RUNTIME-TERMS.md); these are separate from the plugin's MIT license.
+
+For an already downloaded ZIP, pass `--archive /absolute/path/to/ACP-runtime-0.1.0-preview.20261011-macos-arm64.zip`.
+For a different install location, pass `--install-root /absolute/path/outside/your/repositories`.
+Existing version folders are refused. The [release manifest](runtime-release.json) records the
+asset URL, architecture, tested OS and checksum.
+
+With the default location, activate it in this terminal:
+
+```sh
+export PATH="$HOME/Library/Application Support/ACP/runtimes/0.1.0-preview.20261011:$PATH"
+command -v acp
+acp --version
+```
+
+For a custom location, use the quoted PATH command printed by the installer. These changes apply
+to the current terminal. To keep this version across terminals, add the reviewed PATH line to your
+shell profile yourself after testing. Launch Claude/Codex from a terminal with that PATH, or give
+your host the absolute installed `acp` path. A GUI host already running may retain its older PATH.
+Keep `acp-swift-checks` beside the **resolved** executable, with all notices and executable bits.
+
+Check an actual repository without starting workers:
+
+```sh
+acp doctor --repo /absolute/path/to/your/repository
+```
+
+Resolve reported provider/version incompatibilities before delegation. Authenticate selected
+providers through their own CLI. Doctor is a readiness check, not a completed provider workflow.
+
+## 2. Install the skill in your preferred host
+
+For **Claude Code**:
 
 ```sh
 claude plugin marketplace add Vvlladd/acp-plugin
@@ -50,46 +64,48 @@ claude plugin install acp@acp-community
 claude plugin list
 ```
 
-Start a fresh conversation and confirm ACP appears. The packaged command is namespaced as
-`/acp:acp`; use the entry shown by your host. These commands change host configuration but do not
-install the runtime. See [Claude's marketplace guide](https://code.claude.com/docs/en/plugin-marketplaces).
+Start a fresh conversation and confirm `/acp:acp` or the entry shown by your host. See
+[Claude's marketplace guide](https://code.claude.com/docs/en/plugin-marketplaces).
 
-For **Codex**, add the local marketplace using:
+For **Codex**:
 
 ```sh
-codex plugin marketplace add /absolute/path/to/acp-plugin
+codex plugin marketplace add Vvlladd/acp-plugin
+codex plugin add acp@acp-community
+codex plugin list
 ```
 
-Refresh/restart the desktop host as needed, open its plugin directory, choose **ACP Community**
-and install **ACP**. Start a fresh conversation and confirm the `acp-control-plane` skill is
-discovered. The included Codex catalog and compatibility manifest describe this package; host
-versions can differ. See [OpenAI's packaging guide](https://developers.openai.com/plugins/build/plugins)
-for the current local marketplace flow. Do not edit provider or host credentials into the repository.
+The `plugin add` syntax was checked against codex-cli 0.153.0. On desktop versions using the
+plugin directory instead, refresh/restart the host, choose **ACP Community**, then install **ACP**.
+Start a new conversation and confirm `acp-control-plane` is discovered. See
+[OpenAI's marketplace guidance](https://developers.openai.com/plugins/build/plugins).
+These CLI commands alter host configuration; they do not install the daemon or change the host model.
 
-Use one installation of the ACP workflow in a host. If an older ACP plugin is already installed,
-finish its active work and review migration before enabling a second copy. The plugin version
-does not upgrade an already-running daemon.
+Keep one active ACP plugin per host. If an older private ACP plugin is installed, finish its work
+and choose which installation to retain before enabling this one. Do not remove credentials or
+runtime history as part of plugin migration. See [compatibility](COMPATIBILITY.md).
 
-## 3. Start with inspection and explicit setup
+## 3. First task
 
-Ask the host to use ACP, inspect readiness and the saved team, and help define a task. The skill
-will use supported installed commands, reuse authorized choices and request missing setup.
-Your current conversation stays the lead. A setup request alone does not delegate work.
+Ask: “Use ACP for this repository. Inspect readiness and the saved team first, and help me define
+one small task. Keep this conversation as the lead and show me the evidence before integration.”
 
-The skill starts/attaches using `acp up --managed` for a new managed owner unless you choose a
-persistent service. It retains its own session handle. A task uses the saved team; changing that
-team needs your exact choices. Do not register an MCP configuration that starts another `serve`
-owner while also using detached startup. The CLI skill needs no MCP registration.
+The skill reuses authorized saved choices or asks for missing exact setup. It starts or attaches
+to a managed daemon and retains its own session handle. Provider work consumes your provider
+allowance; a setup check alone does not delegate work. Do not add an MCP registration starting
+another `serve` owner alongside detached startup. The CLI skill needs no MCP registration.
 
-When an integration gate appears, inspect the evidence and approve or deny through your own
-terminal or the Mac app. The agent must wait. Disabled checks remain unperformed.
+Personally inspect the frozen evidence and approve or deny the gate through your own terminal
+or optional Mac app. Agents must wait; disabled checks remain unperformed. Full chat transfer
+between the host and optional app is not promised.
 
-## Update or stop
+## Update, rollback and uninstall
 
-A new plugin does not replace the CLI/helper or restart a daemon. Finish active work, preserve
-history, retain the previous version for rollback, and follow the binary release's update guide.
-Do not replace another session's running owner as a setup shortcut.
+Finish active work and gates before switching runtime versions. Keep the previous version folder
+and history. Change PATH to the desired version and check `command -v acp`; a new plugin does not
+upgrade a running owner. Rollback must be verified for the exact version pair in a disposable repo.
 
-Ask explicitly to stop ACP when desired. Safe stop waits for work and gates; cancel-and-stop is
-a separate choice. `acp down` stops supervision while workers may survive, so it is not equivalent
-to cancelling everything. The shared skill documents the full lifecycle.
+To uninstall the runtime, finish the owning daemon's work, remove only its version folder and any
+PATH line you added. Keep `.acp` history and resumable worktrees. Uninstall the plugin through its
+host separately. `acp down` leaves workers potentially alive; use the skill's safe stop lifecycle.
+The [acceptance checklist](FINAL-VERIFICATION.md) records further manual checks.

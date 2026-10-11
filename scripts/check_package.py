@@ -83,6 +83,17 @@ def main():
     require("Bash(acp gate approve" not in command.split("---", 2)[1],
             "Agent approval must not enter the command allowlist")
 
+    runtime = read_json("docs/runtime-release.json")
+    installer = (ROOT / "scripts/install-runtime.sh").read_text()
+    require(f"readonly RELEASE_ID='{runtime['releaseId']}'" in installer, "Installer release mismatch")
+    require(f"readonly EXPECTED_SHA256='{runtime['sha256']}'" in installer, "Installer checksum mismatch")
+    require(runtime["architecture"] == "arm64" and runtime["notarized"] is False,
+            "Update the preview contract deliberately for another architecture/signing mode")
+    require(re.fullmatch(r"[0-9a-f]{64}", runtime["sha256"]), "Invalid archive checksum")
+    require(runtime["tag"] == "runtime-v" + runtime["releaseId"], "Runtime tag mismatch")
+    require(runtime["downloadUrl"] == "https://github.com/Vvlladd/acp-plugin/releases/download/"
+            + runtime["tag"] + "/" + runtime["asset"], "Unexpected runtime download URL")
+
     link_count = 0
     for name in sorted(actual):
         if not name.endswith(".md"):

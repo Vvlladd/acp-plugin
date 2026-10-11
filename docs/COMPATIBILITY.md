@@ -1,13 +1,13 @@
 # Compatibility and release status
 
-Updated 2026-10-11. Public installation acceptance is pending.
+Updated 2026-10-11. Public preview is available; broader installation acceptance is pending.
 
 | Component | Package expectation | Limit |
 |---|---|---|
 | Plugin distribution | `0.1.0` in portable/Claude/Codex identities | Independent of daemon and skill versions |
 | Shared skill contract | `0.5.0`, recorded in skill metadata | Commands require matching runtime capabilities |
-| Runtime | Trusted CLI plus matching `acp-swift-checks` | Not included here; public version/asset matrix pending |
-| Current local candidate | macOS 26+; Apple Silicon CLI; universal analyzer | Does not establish an Intel CLI release or second-machine acceptance |
+| Runtime | Trusted CLI plus matching `acp-swift-checks` | Separate [preview asset](runtime-release.json); not bundled in plugin source |
+| Current public preview | macOS 26+; Apple Silicon CLI; universal analyzer | Locally tested on macOS 27; no Intel CLI, notarization or second-machine acceptance |
 | Host workflow | Existing local Claude Code/Codex chat with shell execution | No browser-only runtime; does not change the host's model |
 | Worker selection | Returned `acp team roles` catalog and valid saved team | No arbitrary model/flag passthrough |
 | Daemon-spawned Codex lead | Exactly `codex-cli 0.153.0` in the current engine profile | Separate from using an existing host conversation as lead |

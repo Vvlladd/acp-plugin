@@ -1,12 +1,13 @@
 # Maintainer release checklist
 
-The plugin source preview is public; this checklist governs subsequent releases. Running the checker does not publish, install a runtime,
+The plugin and compiled runtime preview are public; this checklist governs subsequent releases.
+Running the checker does not publish, install a runtime,
 submit to a directory, start a provider or approve a Git integration gate.
 
 ## Plugin release
 
 1. Review every file in `package-inventory.json`. Keep the skill, command, metadata, original
-   documentation and MIT notices only. Inspect the diff for private source, paths, credentials,
+   documentation, explicit installer and MIT notices only. Inspect the diff for private source, paths, credentials,
    research, runtime state or unrelated artifacts; the checker is not a complete secret scanner.
 2. Keep the portable, Claude and Codex identity versions and Claude catalog entry aligned.
    Record the shared skill version separately. Update compatibility and release status honestly.
@@ -17,7 +18,8 @@ submit to a directory, start a provider or approve a Git integration gate.
    Paid provider acceptance needs its own authorization; record exactly what was tested.
 5. Configure a real security contact/private reporting before accepting external users.
 6. Review the exact initial commit/file inventory and selected remote visibility with the owner.
-   Create a release tag only after final host verification; source preview publication is separate. Use the separate plugin repository;
+   Record explicit owner authorization for preview publication and its unverified limits.
+   Accepted release claims require the corresponding host checks. Use the separate plugin repository;
    do not point a public catalog at the private engine repository.
 7. Consider official directory submissions after a usable runtime release and host acceptance.
    A self-hosted catalog is not an official endorsement or directory listing.
@@ -33,6 +35,7 @@ Use immutable versioned download assets and SHA-256 checksums. Do not include so
 symbols, credentials or internal reports in the public runtime package. Preserve the analyzer
 beside the resolved CLI executable and include the relevant third-party notices.
 
-Replace the installation guide's “public runtime not released” statement only when its download
-and acceptance evidence exist. Do not remove quarantine or bypass OS checks to make a demo work.
+Keep download links, pinned checksums, signing status and acceptance limits aligned with the
+actual public asset. Runtime preview publication does not establish clean-machine acceptance.
+Do not remove quarantine or bypass OS checks to make a demo work.
 Keep a local development candidate explicitly labelled and separate from public assets.
