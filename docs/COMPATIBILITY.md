@@ -10,6 +10,7 @@ Updated 2026-10-11. Public preview is available; broader installation acceptance
 | Current public preview | macOS 26+; Apple Silicon CLI; universal analyzer | Locally tested on macOS 27; no Intel CLI, notarization or second-machine acceptance |
 | Host workflow | Existing local Claude Code/Codex chat with shell execution | No browser-only runtime; does not change the host's model |
 | Worker selection | Returned `acp team roles` catalog and valid saved team | No arbitrary model/flag passthrough |
+| Codex writing-worker sandbox evidence | Measured at `codex-cli 0.132.0` | Doctor warns on drift; `0.153.0` lead support does not establish writer sandbox parity |
 | Daemon-spawned Codex lead | Exactly `codex-cli 0.153.0` in the current engine profile | Separate from using an existing host conversation as lead |
 | Optional Mac app | Matching binary/protocol capabilities | Separate package; not needed for the host skill |
 
@@ -28,3 +29,15 @@ broader installed/platform acceptance remain later work.
 
 A release must record the exact plugin, runtime/helper, host and provider versions actually
 tested. Static package validation cannot establish live model behavior or native app acceptance.
+
+## Publication smoke checks
+
+The public HTTPS download and pinned installer completed on macOS 27.0/arm64. CLI/helper version
+checks passed. Doctor returned 12 checks, zero failures and five warnings on a new disposable
+repository: exclusion/state/socket not yet initialized, Codex writer sandbox version drift and
+dated/incomplete model rates. These warnings are not silently treated as completed acceptance.
+
+Claude Code 2.1.296 added this GitHub marketplace, installed `acp@acp-community`, and reported
+`acp` plus `acp-control-plane` in its component inventory using an isolated configuration. No
+model request was made. Codex command syntax and packaging are checked; a fresh Codex installation
+and complete human-supervised workflow remain manual acceptance.
