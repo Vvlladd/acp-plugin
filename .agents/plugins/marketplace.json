@@ -1,0 +1,20 @@
+{
+  "name": "acp-community",
+  "interface": {
+    "displayName": "ACP Community"
+  },
+  "plugins": [
+    {
+      "name": "acp",
+      "source": {
+        "source": "local",
+        "path": "./plugins/acp"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

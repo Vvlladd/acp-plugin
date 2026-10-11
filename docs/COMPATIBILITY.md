@@ -1,0 +1,30 @@
+# Compatibility and release status
+
+Updated 2026-10-11. Public installation acceptance is pending.
+
+| Component | Package expectation | Limit |
+|---|---|---|
+| Plugin distribution | `0.1.0` in portable/Claude/Codex identities | Independent of daemon and skill versions |
+| Shared skill contract | `0.5.0`, recorded in skill metadata | Commands require matching runtime capabilities |
+| Runtime | Trusted CLI plus matching `acp-swift-checks` | Not included here; public version/asset matrix pending |
+| Current local candidate | macOS 26+; Apple Silicon CLI; universal analyzer | Does not establish an Intel CLI release or second-machine acceptance |
+| Host workflow | Existing local Claude Code/Codex chat with shell execution | No browser-only runtime; does not change the host's model |
+| Worker selection | Returned `acp team roles` catalog and valid saved team | No arbitrary model/flag passthrough |
+| Daemon-spawned Codex lead | Exactly `codex-cli 0.153.0` in the current engine profile | Separate from using an existing host conversation as lead |
+| Optional Mac app | Matching binary/protocol capabilities | Separate package; not needed for the host skill |
+
+Validate `acp --version`, Doctor and required command help against the actual installed runtime.
+An older running owner may lack capabilities present in a new CLI. Report an update requirement;
+do not silently restart a shared owner or substitute a different workflow.
+
+The skill uses Build/Plan/Audit, team v3, managed startup, session ownership, task status and
+human gate handoff. Check `acp session acquire --help` before assuming host-bound ownership;
+the skill retains its documented expiring-lease fallback for older owners.
+
+Fable is a Claude model alias when permitted by the connected catalog. The plugin does not add
+a generic web research worker or expose arbitrary Claude effort flags. Local Swift Review is
+advisory and separate from integration approval. Automatic Swift checks inside agent builds and
+broader installed/platform acceptance remain later work.
+
+A release must record the exact plugin, runtime/helper, host and provider versions actually
+tested. Static package validation cannot establish live model behavior or native app acceptance.

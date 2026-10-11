@@ -1,0 +1,14 @@
+{
+  "name": "acp",
+  "version": "0.1.0",
+  "description": "Operate a separately installed local ACP daemon from your existing Claude Code or Codex conversation, with selected workers and human integration gates.",
+  "author": {
+    "name": "Vlad"
+  },
+  "license": "MIT",
+  "keywords": [
+    "agents",
+    "control-plane",
+    "human-in-the-loop"
+  ]
+}

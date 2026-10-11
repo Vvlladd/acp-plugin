@@ -1,0 +1,27 @@
+{
+  "formatVersion": 1,
+  "files": [
+    ".agents/plugins/marketplace.json",
+    ".claude-plugin/marketplace.json",
+    ".gitignore",
+    "CONTRIBUTING.md",
+    "LICENSE",
+    "README.md",
+    "ROADMAP.md",
+    "SECURITY.md",
+    "docs/COMPATIBILITY.md",
+    "docs/DISTRIBUTION.md",
+    "docs/FINAL-VERIFICATION.md",
+    "docs/INSTALLATION.md",
+    "docs/RELEASING.md",
+    "package-inventory.json",
+    "plugins/acp/.claude-plugin/plugin.json",
+    "plugins/acp/.codex-plugin/plugin.json",
+    "plugins/acp/LICENSE",
+    "plugins/acp/README.md",
+    "plugins/acp/commands/acp.md",
+    "plugins/acp/plugin.json",
+    "plugins/acp/skills/acp-control-plane/SKILL.md",
+    "scripts/check_package.py"
+  ]
+}

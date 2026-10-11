@@ -1,0 +1,18 @@
+{
+  "name": "acp",
+  "version": "0.1.0",
+  "description": "Operate a separately installed local ACP daemon from your existing Claude Code or Codex conversation, with selected workers and human integration gates.",
+  "author": {
+    "name": "Vlad"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "ACP",
+    "shortDescription": "Coordinate local workers with human approval.",
+    "longDescription": "Operate a separately installed local ACP daemon from your existing Claude Code or Codex conversation, with selected workers and human integration gates.",
+    "developerName": "Vlad",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "Use ACP to inspect readiness for this repository."
+  }
+}
