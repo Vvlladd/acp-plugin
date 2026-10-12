@@ -4,12 +4,13 @@ Use ACP from an existing **Claude Code or Codex conversation** to coordinate sel
 inspect their evidence and return the integration decision to you. The optional Mac app shows
 the same local task and history.
 
-**This repository contains the free MIT plugin, not the Rust daemon source.** The plugin requires
-a separately installed `acp` executable. The engine remains private and is available as a free
-compiled preview under separate terms. Provider access and usage come from your own accounts.
+**Free and MIT:** this repository supplies the host plugin and installer. The
+[Rust core and matching Swift analyzer](https://github.com/Vvlladd/acp-core) are also public under
+MIT. The skill needs the installed daemon. The optional Mac app remains private and is not
+required. Provider access and usage come from your own accounts.
 
 **Release status:** the free compiled daemon/helper is available as an
-[Apple Silicon preview](https://github.com/Vvlladd/acp-plugin/releases/tag/runtime-v0.1.0-preview.20261011).
+[Apple Silicon preview](https://github.com/Vvlladd/acp-core/releases/tag/runtime-v0.1.0-preview.20261012).
 The Mac app is optional and is not included. This preview is ad hoc signed and **not notarized**;
 macOS may block downloaded binaries. Read the [installation guide](docs/INSTALLATION.md) and
 [signing status](docs/SIGNING.md) before installing.
@@ -18,6 +19,20 @@ macOS may block downloaded binaries. Read the [installation guide](docs/INSTALLA
 [Compatibility](docs/COMPATIBILITY.md) · [Roadmap](ROADMAP.md) ·
 [Contribute](CONTRIBUTING.md) · [License scope](docs/DISTRIBUTION.md) ·
 [Final verification](docs/FINAL-VERIFICATION.md)
+
+## Quick setup
+
+```sh
+git clone https://github.com/Vvlladd/acp-plugin.git
+cd acp-plugin
+bash scripts/setup.sh --host claude
+```
+
+Use `--host codex` for Codex. Review `scripts/setup.sh` and `scripts/install-runtime.sh` before
+running them. Setup installs the pinned runtime and selected host plugin, then prints the PATH
+line to activate this terminal. It does not run a model or modify shell profiles. Start a fresh
+host conversation after checking `acp doctor`. For manual steps, source builds and preview limits,
+read [installation](docs/INSTALLATION.md).
 
 ## What you can do
 
@@ -52,7 +67,7 @@ app is another client of that runtime. A task link does not transfer the host's 
 flowchart TB
     subgraph distribution["Installation — separate packages"]
         plugin["MIT plugin<br/>skill · command · documentation"]
-        binary["Compiled ACP runtime<br/>CLI + matching analyzer<br/>separate distribution terms"]
+        binary["Compiled ACP runtime<br/>CLI + matching analyzer<br/>MIT + dependency notices"]
     end
     subgraph local["Developer machine"]
         host["Existing Claude Code / Codex chat<br/>keeps its current lead and model"]
@@ -150,9 +165,9 @@ acp-plugin/
 └── LICENSE                          # MIT for this repository's files
 ```
 
-The plugin contains no daemon binary, daemon source, provider credentials, startup hooks or
+The plugin contains no bundled daemon, provider credentials, startup hooks or
 automatic MCP configuration. The [distribution guide](docs/DISTRIBUTION.md) explains the license
-boundary and why compiled delivery does not prevent reverse engineering.
+boundary between the MIT core/plugin and private Mac app.
 
 ## Development
 

@@ -1,28 +1,31 @@
-# Public package roadmap
+# ACP Core roadmap
 
-Updated 2026-10-11. These are proposed milestones, not promised dates or shipped paid features.
+Updated 2026-10-12. The accepted direction is a complete MIT local core and MIT host plugin,
+with the optional Mac app kept private. The core includes the matching Swift analyzer. Commercial
+work remains paused. This file does not claim future capabilities or pending acceptance as shipped.
 
-| Stage | Outcome | Evidence required |
+| Priority | Outcome | Acceptance |
 |---|---|---|
-| Package preparation | Self-contained MIT plugin, diagrams, contribution path and host catalogs | Inventory, links, manifest validation and instruction review |
-| Free runtime release | Trusted compiled CLI and matching analyzer, with separate terms | Notices, checksums, signing/distribution decision and clean-machine acceptance |
-| First useful task | Stay in the original host, coordinate selected work and review the evidence | Fresh host discovery and a complete disposable workflow |
-| Useful return | Resume a real project after several days with understanding | Maintainer can explain the change, rationale and an unresolved question |
-| Understanding prototype | Source-linked maps, confirmed decisions and visible stale/conflicting context | Source support, honest unknowns and retained comprehension |
-| Possible Pro | Automatically maintain useful understanding through skill and optional app | Repeated use, payment and renewal; viable support costs |
+| Now | Independent MIT core and contributor build | Fresh public history, no app/internal files, locked build and fake-provider tests |
+| Now | Easy free runtime + skill installation | Pinned compiled download, matching helper, honest Doctor/provider limits |
+| Next | Trusted distribution | Developer ID signing/notarization, clean/second-machine and fresh-host checks |
+| Next | Reliable first and second useful task | Observed setup, review evidence and safe recovery without losing context |
+| Planned | Automatic Swift checks in builder workflows | Separately designed team/protocol and policy changes |
+| Research | Codebase continuity | Source-linked maps, confirmed decisions, visible stale/conflicting assumptions and return briefs |
+| Later | Optional paid continuity automation through skill and app | Measured benefit and recurring demand; no current billing or entitlement |
 
-The free direction includes useful local execution and continued access to recorded evidence.
-The paid hypothesis is ongoing maintenance of codebase understanding, available through the
-original host as well as the optional app. Existing evidence should remain readable/exportable
-after downgrade. There is no implemented billing or Pro entitlement in this plugin.
+MCP interoperability and mixed-agent orchestration already exist in the market. Compare
+[Superset](https://docs.superset.sh/orchestration), [Intent](https://intentapp.dev/),
+[Entire](https://github.com/entireio/cli) and [HumanLayer](https://www.humanlayer.com/).
+ACP must earn adoption through useful local execution, inspectable controls and retained
+understanding. No unique moat or productivity multiplier has been demonstrated. Users' own
+evidence should remain accessible. A paid app-only dashboard is not an established business case.
 
-The Rust engine and Mac source stay private. The host skill still needs the compiled daemon.
-We will not describe marketplace delivery as protection against reverse engineering, or claim a
-universal productivity multiplier without evidence. Community feedback should focus on a recent
-problem, current workaround and a concrete improvement that would help.
-
-## Current focus — 2026-10-11
-
-The immediate release scope is the free plugin and compiled local runtime. Commercial pricing,
-interviews and paid-pilot work are postponed. Proposed paid capabilities above are future ideas,
-not features or subscriptions offered by this preview.
+```mermaid
+flowchart LR
+    source[MIT core and skill] --> install[Independent installation]
+    install --> repeat[Second useful task and recovery]
+    repeat --> evidence[Measure understanding and return time]
+    evidence -. validate .-> context[Confirmed decisions and current maps]
+    context -. later .-> paid[Optional continuity automation]
+```

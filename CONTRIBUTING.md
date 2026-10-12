@@ -58,3 +58,9 @@ the compatibility guide when a command requirement changes. Publishing is a main
 Contribute only material you have the right to submit under this repository's [MIT license](LICENSE).
 Keep existing notices. Do not copy closed engine source or third-party documentation/code without
 appropriate rights and attribution. A contribution here does not change the runtime's license.
+
+## Public core
+
+The Rust runtime and matching Swift analyzer are now MIT at [acp-core](https://github.com/Vvlladd/acp-core).
+Submit engine changes there; keep this repository focused on the skill, plugin and installation.
+The optional Mac app remains private. Commercial work is paused.

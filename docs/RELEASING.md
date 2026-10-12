@@ -20,14 +20,14 @@ submit to a directory, start a provider or approve a Git integration gate.
 6. Review the exact initial commit/file inventory and selected remote visibility with the owner.
    Record explicit owner authorization for preview publication and its unverified limits.
    Accepted release claims require the corresponding host checks. Use the separate plugin repository;
-   do not point a public catalog at the private engine repository.
+   do not point a public catalog at the private Mac application repository.
 7. Consider official directory submissions after a usable runtime release and host acceptance.
    A self-hosted catalog is not an official endorsement or directory listing.
 
 ## Separate runtime release
 
-Build the CLI and matching analyzer from reviewed private source, retain dependency notices,
-and supply explicit binary terms. Verify supported architectures, signing/notarization,
+Build the CLI and matching analyzer from reviewed MIT acp-core source, retain dependency notices,
+and include the MIT license for original ACP code. Verify supported architectures, signing/notarization,
 downloaded/quarantined installation, checksums and rollback. Publish the tested platform matrix;
 an analyzer's universal architecture does not make a single-architecture CLI universal.
 

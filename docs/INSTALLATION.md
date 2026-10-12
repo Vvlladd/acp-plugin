@@ -1,6 +1,6 @@
 # Install the free daemon and plugin
 
-The [compiled runtime preview](https://github.com/Vvlladd/acp-plugin/releases/tag/runtime-v0.1.0-preview.20261011)
+The [compiled runtime preview](https://github.com/Vvlladd/acp-core/releases/tag/runtime-v0.1.0-preview.20261012)
 is available for Apple Silicon Macs running macOS 26 or later. Local checks ran on macOS 27;
 second-machine and broader OS acceptance remain pending. It includes the daemon/CLI and matching
 analyzer. **The Mac app and Rust toolchain are not required.** Provider access is your own.
@@ -8,6 +8,26 @@ analyzer. **The Mac app and Rust toolchain are not required.** Provider access i
 **This preview is not Developer ID signed or notarized.** macOS may block downloaded executables.
 The installer preserves quarantine and does not bypass Gatekeeper. If execution is blocked, stop
 and use a later signed/notarized release. See [signing status](SIGNING.md).
+
+## Quick setup — runtime and one host
+
+After cloning this repository and reviewing both scripts:
+
+```sh
+bash scripts/setup.sh --host claude
+# Or, for Codex:
+bash scripts/setup.sh --host codex
+```
+
+This runs the pinned runtime installer and the chosen host's marketplace/plugin commands. It
+prints the PATH line; apply it before launching the host and start a fresh conversation. It does
+not alter shell profiles, authenticate providers, execute downloaded binaries or start work.
+If host installation fails after runtime installation, keep that runtime and continue with step 2;
+do not rerun the runtime installer over an existing version. Keep one active ACP plugin per host.
+
+For a source build with Rust 1.94+ and Xcode 27, use the
+[public core build/install guide](https://github.com/Vvlladd/acp-core/blob/main/docs/INSTALLATION.md),
+then continue at step 2 below. The Mac app is not needed for either route.
 
 ## 1. Download and install the compiled runtime
 
@@ -24,9 +44,10 @@ The installer downloads the exact release asset over HTTPS, checks a pinned SHA-
 extraction, validates all payload checksums and copies the complete package into a new version
 folder. It does not execute downloaded binaries, alter host settings, start workers or replace
 another installation. It uses built-in macOS tools; no Python or Cargo is needed for installation.
-Read the [free runtime terms](RUNTIME-TERMS.md); these are separate from the plugin's MIT license.
+The original core and plugin are MIT; keep their license and bundled third-party notices.
+Read the [runtime license](RUNTIME-TERMS.md).
 
-For an already downloaded ZIP, pass `--archive /absolute/path/to/ACP-runtime-0.1.0-preview.20261011-macos-arm64.zip`.
+For an already downloaded ZIP, pass `--archive /absolute/path/to/ACP-runtime-0.1.0-preview.20261012-macos-arm64.zip`.
 For a different install location, pass `--install-root /absolute/path/outside/your/repositories`.
 Existing version folders are refused. The [release manifest](runtime-release.json) records the
 asset URL, architecture, tested OS and checksum.
@@ -34,7 +55,7 @@ asset URL, architecture, tested OS and checksum.
 With the default location, activate it in this terminal:
 
 ```sh
-export PATH="$HOME/Library/Application Support/ACP/runtimes/0.1.0-preview.20261011:$PATH"
+export PATH="$HOME/Library/Application Support/ACP/runtimes/0.1.0-preview.20261012:$PATH"
 command -v acp
 acp --version
 ```

@@ -26,6 +26,7 @@
     "plugins/acp/plugin.json",
     "plugins/acp/skills/acp-control-plane/SKILL.md",
     "scripts/check_package.py",
-    "scripts/install-runtime.sh"
+    "scripts/install-runtime.sh",
+    "scripts/setup.sh"
   ]
 }

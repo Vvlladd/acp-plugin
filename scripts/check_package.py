@@ -91,7 +91,7 @@ def main():
             "Update the preview contract deliberately for another architecture/signing mode")
     require(re.fullmatch(r"[0-9a-f]{64}", runtime["sha256"]), "Invalid archive checksum")
     require(runtime["tag"] == "runtime-v" + runtime["releaseId"], "Runtime tag mismatch")
-    require(runtime["downloadUrl"] == "https://github.com/Vvlladd/acp-plugin/releases/download/"
+    require(runtime["downloadUrl"] == "https://github.com/Vvlladd/acp-core/releases/download/"
             + runtime["tag"] + "/" + runtime["asset"], "Unexpected runtime download URL")
 
     link_count = 0

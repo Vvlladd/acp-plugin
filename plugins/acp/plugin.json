@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "acp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Operate a separately installed local ACP daemon from your existing Claude Code or Codex conversation, with selected workers and human integration gates.",
   "author": {
     "name": "Vlad"

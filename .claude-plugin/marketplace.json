@@ -8,7 +8,7 @@
       "name": "acp",
       "source": "./plugins/acp",
       "description": "Operate a separately installed local ACP daemon from your existing Claude Code or Codex conversation, with selected workers and human integration gates.",
-      "version": "0.1.0"
+      "version": "0.2.0"
     }
   ],
   "description": "Free host instructions for a separately installed local ACP daemon."

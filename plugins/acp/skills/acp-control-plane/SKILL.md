@@ -300,3 +300,12 @@ owner model: either the host starts `acp serve` on stdio, or `acp up` starts det
 `serve --no-mcp` and MCP connects through `acp mcp-proxy`. Do not register `serve` and then
 also start a detached daemon. Configuration belongs at user level with a trusted binary,
 never in worker-writable project `.codex/config.toml`.
+
+## Public installation
+
+The daemon and matching Swift analyzer are MIT at https://github.com/Vvlladd/acp-core. The Mac
+app is optional and remains private. If `acp` is missing or the helper is unavailable, use the
+public installation guide at https://github.com/Vvlladd/acp-plugin/blob/main/docs/INSTALLATION.md.
+The host plugin alone does not install the runtime. Source builds require both Rust and the
+matching Swift/Xcode toolchain. Use the installed daemon's catalog and Doctor; publishing the
+source does not broaden supported providers/models or prove notarization/compatibility.

@@ -1,10 +1,10 @@
 #!/bin/bash
 # MIT. User-invoked installer; no hooks, sudo, provider calls or security bypasses.
 set -euo pipefail
-readonly RELEASE_ID='0.1.0-preview.20261011'
+readonly RELEASE_ID='0.1.0-preview.20261012'
 readonly ASSET="ACP-runtime-${RELEASE_ID}-macos-arm64.zip"
-readonly BASE_URL="https://github.com/Vvlladd/acp-plugin/releases/download/runtime-v${RELEASE_ID}"
-readonly EXPECTED_SHA256='fb5f09c8c3d20216f0c9e6d9d23b761e6e17de1cd64b42284e9d088ed4ec6195'
+readonly BASE_URL="https://github.com/Vvlladd/acp-core/releases/download/runtime-v${RELEASE_ID}"
+readonly EXPECTED_SHA256='380980d3f88afd915e808f3483f2aeea822277c9be324a70bd2974dce5448e68'
 install_root="${HOME}/Library/Application Support/ACP/runtimes"
 archive=''
 usage() {

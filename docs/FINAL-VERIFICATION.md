@@ -1,3 +1,6 @@
+> Updated direction, 2026-10-12: the new MIT core/runtime is linked from the installation guide.
+> The checklist remains open for external/fresh-host acceptance; source/local checks are separate.
+
 # Free preview: final verification
 
 The plugin and compiled runtime preview are public. This checklist records the remaining
@@ -5,7 +8,7 @@ checks before describing a release as broadly accepted or notarized.
 It contains no paid-pilot or subscription setup.
 
 - [ ] On a test Mac, record macOS, architecture, host CLI versions and package hashes.
-- [ ] Inspect the binary terms and included dependency notices.
+- [ ] Inspect the MIT license and included dependency notices.
 - [ ] Download/extract the exact proposed runtime through the intended distribution path.
       Record macOS’s signing/quarantine result honestly. Do not remove quarantine or disable
       Gatekeeper. A local development build passing does not establish downloaded acceptance.
@@ -27,5 +30,5 @@ It contains no paid-pilot or subscription setup.
       while preserving local history. Do not run two daemon owners for one repository.
 - [ ] Record results, limitations and supported platforms. Use these observations for the next accepted release and supported-platform claims.
 
-The initial runtime candidate is Apple Silicon only, even if its analyzer also contains Intel code.
+The October 12 package contains an Apple Silicon CLI and matching arm64 analyzer.
 An official marketplace directory submission is optional and separate from this GitHub catalog.
