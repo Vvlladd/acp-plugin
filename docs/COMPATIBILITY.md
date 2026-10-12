@@ -41,3 +41,22 @@ Claude Code 2.1.296 added this GitHub marketplace, installed `acp@acp-community`
 `acp` plus `acp-control-plane` in its component inventory using an isolated configuration. No
 model request was made. Codex command syntax and packaging are checked; a fresh Codex installation
 and complete human-supervised workflow remain manual acceptance.
+
+## October 12 MIT release verification
+
+The new `0.1.0-preview.20261012` MIT package contains native arm64 CLI/helper binaries. A fresh
+public clone ran `scripts/setup.sh --host claude`, anonymously downloaded the exact pinned archive,
+and installed `acp@acp-community` **0.2.0** using an isolated Claude configuration. CLI/helper
+version checks passed. Existing maintainer host configuration hashes were unchanged. Doctor again
+reported 12 checks, zero failures and five warnings (fresh repository state/socket/exclusion,
+Codex writing-worker version drift and dated/incomplete rates). No provider call was made.
+
+The independent core passed 658 Rust tests with nine ignored live probes, warnings-denied Clippy
+and five Swift analyzer tests. Source installation built both binaries. The exact packaged runtime
+passed disposable Swift Review acceptance; the exact helper sandbox profile denied private file
+read/write, network, other exec and fork. Six installer probes verified successful install plus
+corruption/existing/symlink/Git-checkout refusal and quarantine preservation.
+
+Codex 0.153.0 command help confirms the setup syntax; fresh Codex discovery and complete model
+workflows remain unperformed. This local CLI-download test is not a clean-machine or browser
+quarantine/Gatekeeper acceptance result. Developer ID signing/notarization remains pending.
