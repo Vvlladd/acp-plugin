@@ -88,7 +88,7 @@ flowchart TB
     workers --> tree
     daemon --> evidence
     evidence --> human
-    human -->|approve or deny via human CLI / app| daemon
+    human -->|decides in host prompt · CLI / app fallback| daemon
     classDef package fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e
     classDef control fill:#ede9fe,stroke:#7c3aed,color:#2e1065
     classDef record fill:#dcfce7,stroke:#15803d,color:#14532d
@@ -128,21 +128,31 @@ sequenceDiagram
     else Selected workflow reaches review
         ACP->>ACP: Freeze evidence for the current attempt
         ACP-->>Host: Pending human gate and recorded results
-        Host-->>Human: Show evidence and gate, wait
-        alt Human approves through own CLI or Mac app
-            Human->>ACP: Approve gate
+        Host-->>Human: Ask in the host: exact gate, evidence and scope
+        alt Human explicitly approves this gate
+            Human->>Host: Approve
+            Host->>ACP: Re-check gate is unchanged, relay that answer once
             ACP->>Git: Verify approved bytes still match, commit
-            ACP-->>Human: Recorded outcome and commit
+            ACP-->>Host: Recorded outcome and commit
         else Human denies
-            Human->>ACP: Deny with feedback
+            Human->>Host: Deny with feedback
+            Host->>ACP: Relay denial and feedback
             ACP-->>Host: Repair or escalation under recorded policy
+        else Wait, timeout or no answer
+            Host-->>Human: Gate stays pending
         end
     end
     Note over Human,Git: Landing the resulting branch on the main branch is a separate human action
 ```
 
-An agent must never approve integration. MCP refuses agent approval; on the skill's shell path,
-this is an instruction boundary. The local socket identifies the OS user, not a physical human.
+An agent must never approve integration. When a review gate is ready, the host asks the human in
+its own UI — a native question prompt where the host permits one (Codex desktop
+`request_user_input_async`, Claude Code `AskUserQuestion`), otherwise an explicit chat reply — and relays only that fresh
+answer for the exact, re-checked gate through the existing `acp gate approve` CLI. A timeout,
+auto-continue, missing answer, automatic command reviewer or worker-authored text never counts.
+Your own shell and the optional Mac app remain fallbacks. Approval commits on the run branch only;
+landing on `main` and publishing stay separate. MCP refuses agent approval; on the skill's shell
+path this is an instruction boundary. The local socket identifies the OS user, not a physical human.
 See [security boundaries](SECURITY.md) before assuming stronger isolation between same-user processes.
 
 ## Package layout

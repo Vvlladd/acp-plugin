@@ -116,8 +116,11 @@ to a managed daemon and retains its own session handle. Provider work consumes y
 allowance; a setup check alone does not delegate work. Do not add an MCP registration starting
 another `serve` owner alongside detached startup. The CLI skill needs no MCP registration.
 
-Personally inspect the frozen evidence and approve or deny the gate through your own terminal
-or optional Mac app. Agents must wait; disabled checks remain unperformed. Full chat transfer
+Personally inspect the frozen evidence and decide the gate when the host asks you in its own UI:
+a native question where the host permits one, otherwise an explicit chat reply naming the exact
+gate. The host relays only that answer, after re-checking that the gate is unchanged. Timeouts,
+auto-continue, missing answers and automatic reviewers never approve. Your own shell or the
+optional Mac app remain fallbacks. Disabled checks remain unperformed. Full chat transfer
 between the host and optional app is not promised.
 
 ## Update, rollback and uninstall

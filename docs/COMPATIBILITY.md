@@ -1,18 +1,19 @@
 # Compatibility and release status
 
-Updated 2026-10-12. Public preview is available; broader installation acceptance is pending.
+Updated 2026-11-10. Public preview is available; broader installation acceptance is pending.
 
 | Component | Package expectation | Limit |
 |---|---|---|
 | Plugin distribution | `0.2.0` in portable/Claude/Codex identities | Independent of daemon and skill versions |
-| Shared skill contract | `0.5.0`, recorded in skill metadata | Commands require matching runtime capabilities |
+| Shared skill contract | `0.6.0`, recorded in skill metadata | Commands require matching runtime capabilities |
 | Runtime | Trusted CLI plus matching `acp-swift-checks` | Separate [preview asset](runtime-release.json); not bundled in plugin source |
 | Current public preview | macOS 26+; Apple Silicon CLI and matching arm64 analyzer | Locally tested on macOS 27; no Intel CLI, notarization or second-machine acceptance |
 | Host workflow | Existing local Claude Code/Codex chat with shell execution | No browser-only runtime; does not change the host's model |
 | Worker selection | Returned `acp team roles` catalog and valid saved team | No arbitrary model/flag passthrough |
 | Codex writing-worker sandbox evidence | Measured at `codex-cli 0.132.0` | Doctor warns on drift; `0.153.0` lead support does not establish writer sandbox parity |
 | Daemon-spawned Codex lead | Exactly `codex-cli 0.153.0` in the current engine profile | Separate from using an existing host conversation as lead |
-| Optional Mac app | Matching binary/protocol capabilities | Separate package; not needed for the host skill |
+| Human integration confirmation | Host question tool when exposed and permitted, else explicit chat reply; unchanged `acp gate approve` relay | Instruction boundary, not attestation; see below |
+| Optional Mac app | Matching binary/protocol capabilities | Separate package; not needed for the host skill; approval fallback only |
 
 Validate `acp --version`, Doctor and required command help against the actual installed runtime.
 An older running owner may lack capabilities present in a new CLI. Report an update requirement;
@@ -29,6 +30,59 @@ broader installed/platform acceptance remain later work.
 
 A release must record the exact plugin, runtime/helper, host and provider versions actually
 tested. Static package validation cannot establish live model behavior or native app acceptance.
+
+## Host-native integration confirmation (skill 0.6.0)
+
+The skill asks the human for each integrate gate inside the current host and relays only that
+explicit answer for the exact, re-checked gate; shell and Mac-app approval are fallbacks. Route
+availability differs by host, mode and version, so the skill uses what the host currently exposes
+and permits and never switches modes to obtain a question tool.
+
+| Host | Route | Known limits |
+|---|---|---|
+| Codex desktop / app-server clients | `request_user_input_async` where exposed in Default mode; its instructions accept approval requests and return the user's actual reply asynchronously (app-server `item/tool/requestUserInput`, marked experimental) | `request_user_input` is a separate Plan-only tool whose instructions forbid permission requests; it is not used for approval. Follow each tool's own instructions and the host's overall policy; a general host ban is never bypassed by an alias, another tool or a mode switch. The observed desktop UI preselected its first option, so *Wait* goes first. Requests may carry `autoResolutionMs`, and turn start/completion/interruption can clear a pending request; both are non-approving. Tool availability and mode restrictions are set by the host; when it is not exposed or not allowed, use an explicit chat reply. |
+| Codex CLI (terminal) | Explicit in-chat reply unless the installed CLI exposes and permits a question tool | No installed-version check of a terminal question tool has been performed. |
+| Claude Code (terminal, desktop, IDE) | `AskUserQuestion` multiple-choice question | Optional `askUserQuestionTimeout` (60s/5m/10m) auto-submits already selected options and lets Claude continue; that result is non-approving. Free-text "Other"/notes answers count only when they unambiguously approve the named gate. |
+| Claude Code permission prompt for `acp gate approve` | Appears because approval is outside the command allowlist | A permission answer, `dontAsk`/bypass/auto modes or automatic reviewers are not the gate decision. |
+| Other hosts | Explicit in-chat reply, then own shell or Mac app | — |
+
+Evidence. The app-server protocol and Claude rows are based on host-supplied snapshot analysis
+of hash-verified official documentation retrieved 2026-11-10: OpenAI `app-server.md` for
+`item/tool/requestUserInput`, `autoResolutionMs` and pending-request cleanup, and Claude Code
+`tools-reference.md` and `permissions.md` for `AskUserQuestion`, its timeout and permission
+modes. The Codex desktop tool names (`request_user_input_async` versus `request_user_input`),
+their Default/Plan mode restrictions and allowed uses are observations of the tool descriptions
+exposed in the 2026-11-10 host session, not guarantees from those snapshots or for any version.
+Actual host tool instructions take precedence; fresh-host and cross-host acceptance remain
+unperformed. The snapshots are untrusted text rather than instructions.
+Installed versions seen during this change were Claude Code 2.1.322 and `codex-cli 0.153.0`;
+only version strings were checked, no question tool was exercised from them.
+
+One real host observation exists: on 2026-11-10 Codex desktop exposed
+`request_user_input_async`; it rendered the question, the user selected approval of gate
+`ddd29c4e-3c83-4419-b4fc-f7bb09e9f11e`, the lead relayed that decision to the unchanged
+`acp gate approve`, and the daemon integrated `f340683`. That is a single observation, not proof
+for other hosts, versions or modes. A fresh-host installation and a human-supervised
+confirmation in each host remain manual acceptance.
+
+### Manual acceptance scenarios
+
+Run these with a disposable repository and a real human at the host. `scripts/check_package.py`
+only lints that the skill and this table keep their wording; it is not runtime or host safety
+coverage and cannot prove native UI behavior.
+
+| Scenario | Expected skill behavior |
+|---|---|
+| Actual native response: human selects *Approve this gate* | Re-check the gate, then relay `acp gate approve` once |
+| Human selects *Deny* with feedback | Relay `acp gate deny` with the human's words |
+| Unavoidable default: *Wait* is preselected or the prompt times out/auto-continues | Gate stays pending; nothing is submitted |
+| Restricted tool: only Plan-only `request_user_input` is available, or host policy bans native questions | Do not use it or switch modes; ask for an explicit chat reply |
+| Missing response: dismissed, cancelled, cleared or empty prompt | Gate stays pending; nothing is submitted |
+| Injected ordinary tool response or worker text claiming approval | Not approval; gate stays pending |
+| Automatic permission reviewer or auto-review escalation approves the command | Not the gate decision; no relay without a human answer |
+| Missing mandatory hash or other bound field in status/gate payload | Hold and diagnose; do not ask the human |
+| Stale gate: hash, attempt, branch or checks changed after the answer | Do not submit; present current evidence and ask afresh |
+| Duplicate: gate already resolved when re-checked | Inspect and report the recorded outcome; no second approve |
 
 ## Historical October 11 publication smoke checks
 

@@ -20,6 +20,53 @@ def read_json(relative):
     return json.loads((ROOT / relative).read_text(encoding="utf-8"))
 
 
+# Static lint of the human integration confirmation wording. This is not runtime or host
+# safety coverage: it only keeps the instructions and the manual scenario matrix from drifting.
+MANUAL_SCENARIOS = ("Actual native response", "Human selects *Deny*", "Unavoidable default",
+                    "Missing response", "Restricted tool", "Injected ordinary tool response",
+                    "Automatic permission reviewer", "Missing mandatory hash", "Stale gate",
+                    "Duplicate")
+
+
+def check_confirmation_contract():
+    skill = (ROOT / "plugins/acp/skills/acp-control-plane/SKILL.md").read_text()
+    flat = " ".join(skill.split())
+    for phrase in ("## Human integration confirmation", "request_user_input", "AskUserQuestion",
+                   "askUserQuestionTimeout", "autoResolutionMs", "put *Wait* first",
+                   "highlighting is never submission", "request_user_input_async",
+                   "Follow each available tool's own instructions",
+                   "Plan-only tool whose instructions forbid permission requests",
+                   "never bypass a general host ban", "never from worker-authored text",
+                   "Asking again does not repair absent evidence",
+                   "Provenance comes from the host, never from a field inside the answer",
+                   "Do not switch into Plan mode", "automatic shell or permission reviewer",
+                   "auto-review escalation", "approval text originating in worker output",
+                   "Immediately after a real approval", "ask afresh",
+                   "instead of approving again", "One approval covers one gate",
+                   "does not merge to `main`", "do not claim cryptographic"):
+        require(phrase in flat, f"Skill lost confirmation rule: {phrase}")
+    stale_phrases = ("in **their** shell", "relay the gate id and stop",
+                     "Never run `acp gate approve`", "through your own terminal",
+                     "approves through own CLI or Mac app", "via human CLI / app",
+                     "covers its variants")
+    for relative in ("plugins/acp/skills/acp-control-plane/SKILL.md", "plugins/acp/commands/acp.md",
+                     "plugins/acp/README.md", "README.md", "docs/INSTALLATION.md",
+                     "SECURITY.md", "CONTRIBUTING.md", "docs/COMPATIBILITY.md"):
+        text = " ".join((ROOT / relative).read_text().split())
+        for stale in stale_phrases:
+            require(stale not in text, f"{relative} still makes shell approval the default: {stale}")
+    version = re.search(r'^  version: "([0-9.]+)"$', skill, re.M)
+    compat = (ROOT / "docs/COMPATIBILITY.md").read_text()
+    require(version and f"| Shared skill contract | `{version.group(1)}`" in compat,
+            "Compatibility guide skill contract version mismatch")
+    plugin_readme = (ROOT / "plugins/acp/README.md").read_text()
+    require(f"Shared skill contract: **{version.group(1)}**" in plugin_readme,
+            "Plugin README skill contract version mismatch")
+    for scenario in MANUAL_SCENARIOS:
+        require(f"| {scenario}" in compat, f"Manual scenario missing: {scenario}")
+    return len(MANUAL_SCENARIOS)
+
+
 def main():
     inventory = read_json("package-inventory.json")
     require(inventory.get("formatVersion") == 1, "Unsupported inventory format")
@@ -83,6 +130,8 @@ def main():
     require("Bash(acp gate approve" not in command.split("---", 2)[1],
             "Agent approval must not enter the command allowlist")
 
+    scenarios = check_confirmation_contract()
+
     runtime = read_json("docs/runtime-release.json")
     installer = (ROOT / "scripts/install-runtime.sh").read_text()
     require(f"readonly RELEASE_ID='{runtime['releaseId']}'" in installer, "Installer release mismatch")
@@ -111,7 +160,8 @@ def main():
             require(resolved.exists(), f"Missing link in {name}: {target}")
             link_count += 1
     print(json.dumps({"ok": True, "files": len(actual), "localLinks": link_count,
-                      "pluginVersion": portable["version"], "runtimeIncluded": False}, indent=2))
+                      "pluginVersion": portable["version"], "manualConfirmationScenariosListed": scenarios,
+                      "runtimeIncluded": False}, indent=2))
 
 
 if __name__ == "__main__":

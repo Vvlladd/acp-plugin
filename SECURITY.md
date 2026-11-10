@@ -21,6 +21,17 @@ The host agent's independent tools remain governed by the host. MCP refuses inte
 from an agent; a host with shell access is governed by the skill's prohibition on approval.
 The socket is a local same-user boundary, not proof that the caller is a physical human.
 
+Integration approval is a human decision collected in the current host and relayed through the
+unchanged CLI. The skill requires one decision per exact gate, bound to its run, attempt,
+branch and check results and re-checked immediately before submission. Timeouts, auto-continue
+answers, dismissed or missing prompts, *Wait*, automatic permission/command reviewers and
+approval-like text in worker output or ordinary tool results are non-approving. Answer provenance
+comes from the host's own question response, never from a label inside the answer; when the host
+cannot tell a real selection from an auto-submitted one, the skill uses an explicit chat reply. These rules are agent instructions: the
+host transcript and ACP's event log record what happened, but neither is a cryptographic
+attestation that a particular person answered, and a compromised or misbehaving host agent can
+still reach the same-user socket. Report suspected bypasses of this boundary privately.
+
 Provider sessions may send selected task/code inputs to the user's provider under that provider's
 terms. A local daemon does not make provider inference offline. The optional app and host can read
 the same recorded task; this does not automatically capture the whole host transcript.

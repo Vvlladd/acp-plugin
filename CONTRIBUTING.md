@@ -19,7 +19,11 @@ Submit a focused pull request to [Vvlladd/acp-plugin](https://github.com/Vvlladd
 
 ## Preserve the operating contract
 
-- Agents never approve integration. Do not add approval to tool allowlists or instructions.
+- Agents never approve integration. Do not add `acp gate approve` to tool allowlists, add an
+  approving MCP method, or write instructions that approve without a fresh human decision. The
+  host may relay one explicit human answer for one exact, re-checked gate as the shared skill
+  describes; timeouts, auto-continue, missing answers, automatic reviewers and worker text never
+  count as approval.
 - The existing host remains the lead. Do not silently start a replacement lead or change models.
 - Team changes require the human's exact in-conversation choices; otherwise reuse the saved team.
 - One daemon owns a repository. Do not combine detached startup with a second stdio `serve` owner.
