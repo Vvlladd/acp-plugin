@@ -74,7 +74,7 @@ coverage and cannot prove native UI behavior.
 | Scenario | Expected skill behavior |
 |---|---|
 | Actual native response: human selects *Approve this gate* | Re-check the gate, then relay `acp gate approve` once |
-| Human selects *Deny* with feedback | Relay `acp gate deny` with the human's words |
+| Human selects *Deny* with feedback | Re-check the exact evidence, then relay `acp gate deny <gate-id> --repo <absolute-repo> --feedback …` once |
 | Unavoidable default: *Wait* is preselected or the prompt times out/auto-continues | Gate stays pending; nothing is submitted |
 | Restricted tool: only Plan-only `request_user_input` is available, or host policy bans native questions | Do not use it or switch modes; ask for an explicit chat reply |
 | Missing response: dismissed, cancelled, cleared or empty prompt | Gate stays pending; nothing is submitted |
@@ -83,6 +83,23 @@ coverage and cannot prove native UI behavior.
 | Missing mandatory hash or other bound field in status/gate payload | Hold and diagnose; do not ask the human |
 | Stale gate: hash, attempt, branch or checks changed after the answer | Do not submit; present current evidence and ask afresh |
 | Duplicate: gate already resolved when re-checked | Inspect and report the recorded outcome; no second approve |
+
+### Offline native-decision contract fixtures
+
+`tests/test_native_approval_contract.py` exercises frozen, realistic ACP status/gate snapshots
+through a fake host and a recording CLI. It covers a genuine approve, a scoped denial, Wait,
+preselection, timeout, dismissal, no reply, duplicate delivery, already-resolved gates, missing
+fields, changes to the run/attempt/diff/check/base/branch, and approval text injected through a
+worker or an unrelated tool. The fake CLI receives exactly one command only after an authorized
+decision and an unchanged re-check. `scripts/check_package.py` runs these tests offline.
+
+The fixtures use `plugins/acp/scripts/approval_contract.py`, the read-only evidence helper named by the shared
+skill; they are not substring assertions or a second approval protocol. The helper only rejects
+incomplete/stale evidence and returns a command-shaped plan. It never runs ACP and cannot determine
+that a physical person answered. `FakeHost` uses a typed native-callback object distinct from
+arbitrary event payloads; that test type is not an attestation a real host may accept from JSON or
+prose. Real provenance stays at the current host's native-response
+boundary, and fresh-host/cross-host walkthrough acceptance remains unverified.
 
 ## Historical October 11 publication smoke checks
 

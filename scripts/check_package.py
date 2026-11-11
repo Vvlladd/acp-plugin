@@ -4,6 +4,7 @@
 import json
 from pathlib import Path
 import re
+import subprocess
 import sys
 from urllib.parse import unquote
 
@@ -45,6 +46,8 @@ def check_confirmation_contract():
                    "instead of approving again", "One approval covers one gate",
                    "does not merge to `main`", "do not claim cryptographic"):
         require(phrase in flat, f"Skill lost confirmation rule: {phrase}")
+    require("scripts/approval_contract.py" in flat,
+            "Skill lost the shared read-only evidence helper")
     stale_phrases = ("in **their** shell", "relay the gate id and stop",
                      "Never run `acp gate approve`", "through your own terminal",
                      "approves through own CLI or Mac app", "via human CLI / app",
@@ -65,6 +68,20 @@ def check_confirmation_contract():
     for scenario in MANUAL_SCENARIOS:
         require(f"| {scenario}" in compat, f"Manual scenario missing: {scenario}")
     return len(MANUAL_SCENARIOS)
+
+
+def run_native_contract_tests():
+    helper = (ROOT / "plugins/acp/scripts/approval_contract.py").read_text()
+    for forbidden in ("import subprocess", "import os", "os.system", "Popen(", "acp gate"):
+        require(forbidden not in helper, f"Evidence helper gained an execution path: {forbidden}")
+    test = ROOT / "tests/test_native_approval_contract.py"
+    completed = subprocess.run([sys.executable, str(test)], cwd=ROOT, text=True,
+                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=30)
+    require(completed.returncode == 0,
+            "Native approval contract tests failed:\n" + completed.stdout)
+    match = re.search(r"Ran (\d+) tests?", completed.stdout)
+    require(match is not None, "Native approval contract test count unavailable")
+    return int(match.group(1))
 
 
 def main():
@@ -131,6 +148,7 @@ def main():
             "Agent approval must not enter the command allowlist")
 
     scenarios = check_confirmation_contract()
+    contract_tests = run_native_contract_tests()
 
     runtime = read_json("docs/runtime-release.json")
     installer = (ROOT / "scripts/install-runtime.sh").read_text()
@@ -161,6 +179,7 @@ def main():
             link_count += 1
     print(json.dumps({"ok": True, "files": len(actual), "localLinks": link_count,
                       "pluginVersion": portable["version"], "manualConfirmationScenariosListed": scenarios,
+                      "nativeApprovalContractTests": contract_tests,
                       "runtimeIncluded": False}, indent=2))
 
 
