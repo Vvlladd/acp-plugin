@@ -25,10 +25,12 @@
     "plugins/acp/commands/acp.md",
     "plugins/acp/plugin.json",
     "plugins/acp/scripts/approval_contract.py",
+    "plugins/acp/scripts/retention_contract.py",
     "plugins/acp/skills/acp-control-plane/SKILL.md",
     "scripts/check_package.py",
     "scripts/install-runtime.sh",
     "scripts/setup.sh",
-    "tests/test_native_approval_contract.py"
+    "tests/test_native_approval_contract.py",
+    "tests/test_retention_contract.py"
   ]
 }

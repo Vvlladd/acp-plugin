@@ -84,6 +84,34 @@ def run_native_contract_tests():
     return int(match.group(1))
 
 
+def run_retention_contract_tests():
+    skill = (ROOT / "plugins/acp/skills/acp-control-plane/SKILL.md").read_text()
+    flat = " ".join(skill.split())
+    for phrase in ("## Retained worktree inventory and retirement", "retention.inventory",
+                   "retention.retire", "one socket connection", "every bound field",
+                   "permanently ends resumability", "recoverable Trash",
+                   "disk space is not actually reclaimed", "put *Wait* first",
+                   "actual human selection", "original `item` object exactly",
+                   "unique `requestId`", "Do not substitute `acp worktree retire --confirm`",
+                   "outcome is unknown", "do not retry blindly"):
+        require(phrase in flat, f"Skill lost retention rule: {phrase}")
+    helper = (ROOT / "plugins/acp/scripts/retention_contract.py").read_text()
+    for forbidden in ("import subprocess", "os.system", "Popen(", "shutil.rmtree", "os.remove"):
+        require(forbidden not in helper, f"Retention helper gained an unsafe execution path: {forbidden}")
+    require('client.call("retention.inventory", {})' in helper,
+            "Retention helper lost its exact inventory entry point")
+    require('client.call("retention.retire", request)' in helper,
+            "Retention helper lost its exact retirement entry point")
+    test = ROOT / "tests/test_retention_contract.py"
+    completed = subprocess.run([sys.executable, str(test)], cwd=ROOT, text=True,
+                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=30)
+    require(completed.returncode == 0,
+            "Retention contract tests failed:\n" + completed.stdout)
+    match = re.search(r"Ran (\d+) tests?", completed.stdout)
+    require(match is not None, "Retention contract test count unavailable")
+    return int(match.group(1))
+
+
 def main():
     inventory = read_json("package-inventory.json")
     require(inventory.get("formatVersion") == 1, "Unsupported inventory format")
@@ -155,6 +183,7 @@ def main():
 
     scenarios = check_confirmation_contract()
     contract_tests = run_native_contract_tests()
+    retention_tests = run_retention_contract_tests()
 
     runtime = read_json("docs/runtime-release.json")
     installer = (ROOT / "scripts/install-runtime.sh").read_text()
@@ -186,6 +215,7 @@ def main():
     print(json.dumps({"ok": True, "files": len(actual), "localLinks": link_count,
                       "pluginVersion": portable["version"], "manualConfirmationScenariosListed": scenarios,
                       "nativeApprovalContractTests": contract_tests,
+                      "retentionContractTests": retention_tests,
                       "runtimeIncluded": False}, indent=2))
 
 

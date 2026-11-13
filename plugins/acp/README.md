@@ -8,7 +8,7 @@ The compiled daemon and matching analyzer are external dependencies, not include
 by this package. The original conversation stays the lead. Agents must never approve integration.
 No automatic download hook, daemon startup hook or MCP configuration is installed here.
 
-Distribution package version: **0.2.1**. Shared skill contract: **0.6.0**. They are independent
+Distribution package version: **0.2.2**. Shared skill contract: **0.6.0**. They are independent
 of the daemon version. Provider usage comes from the user's own provider accounts.
 
 Copyright and permissions: [MIT license](LICENSE).

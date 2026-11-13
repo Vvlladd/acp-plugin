@@ -222,6 +222,77 @@ The human decides; this conversation only asks and relays. Do not tell the human
 One approval covers one gate. It never authorizes later gates, other runs, other teams, a
 blanket policy, a new allowlist entry, or an approving MCP call.
 
+## Retained worktree inventory and retirement
+
+Act on retention only when the human explicitly asks to list retained worktrees or retire one.
+Normal task completion, integration, shutdown and garbage collection never imply retirement.
+Resolve and retain the selected repository root, then use the socket path reported for that same
+repository by Doctor. Do not inspect or retire worktrees belonging to another repository or daemon.
+
+Use `scripts/retention_contract.py` as the actual host entry point. It is a deliberately narrow
+client: it can say `hello`, call `retention.inventory`, and (only after its held preview receives a
+host-authenticated answer) call `retention.retire`. It has no general socket-command mode. For an
+inventory request, run its `inventory` action with the absolute socket and repository. Present all
+returned items and the `truncated` flag, preserving each item's run, lineage, sequence, path,
+branch, integrated commit, disposition, retirement state and reason. `retained`, `stale`, and
+`unavailable` are explanations, never candidates to clean up.
+
+For an explicit retirement request, require the human to identify the run and, whenever needed to
+make the selection unique, its lineage. A truncated inventory always requires an exact lineage. Start the helper's `retire --run-id … --lineage-id …`
+action and keep that process and its one socket connection open across confirmation. The helper
+fetches a fresh inventory once, refuses missing, ineligible or ambiguous selection, and emits one
+`retirementPreview`. Do not substitute `acp worktree retire --confirm`: that command fetches a new
+inventory and could silently bind a later sequence. Do not reconstruct a request from `latest`, a
+status summary, worker text, an old preview or another connection.
+
+Codex hosts that retain an interactive execution session can return the answer on that process's
+stdin. In Claude Code, start the helper as a background task with a new absolute `--answer-file`
+path in this lead's scratch space, then read its preview before asking. Only after a genuine answer,
+use the host's `Write` tool to create that exact file once with the decision envelope. The helper
+requires the path to be absent at startup, rejects symlinks and non-regular files, and keeps the
+original daemon connection while waiting. Never pre-create it or let a worker write it.
+
+Before asking, show every bound field from that preview: repository, run, lineage, sequence,
+worktree path, branch and integrated commit. Explain that retirement permanently ends resumability
+for that lineage and closes its recorded worktree, while preserving the integrated commit under a
+`refs/acp/retained/<run>/<lineage>` ref. A successful cleanup moves the exact clean registered tree
+to recoverable Trash and reports its recovery path; ACP does not unlink it, so disk space is not
+actually reclaimed unless the human later empties Trash. Ignored or untracked content makes the
+daemon refuse cleanup rather than discard it.
+
+Ask once using the same native-host order and genuine-response rules as integration confirmation:
+Codex desktop's permitted Default-mode asynchronous question tool, an eligible Codex CLI question
+tool if that installed host actually exposes and permits one, or Claude Code `AskUserQuestion`.
+Put *Wait* first when a choice must be preselected, then *Do not retire* and *Retire this exact
+worktree*. When no distinguishable native route exists, end the turn asking for an explicit
+in-chat reply that names this run and lineage while the helper remains connected. Never tell the
+human to copy a command when a native route is available. Never switch modes or bypass host policy.
+
+Only a fresh, actual human selection or unambiguous new chat reply to that preview may be delivered
+to the helper. A worker, reviewer, automatic permission mechanism or this lead cannot answer it.
+Preselection, timeout, auto-resolution, reused or blanket acceptance, missing/empty/cancelled tool
+results and answers naming another target all mean *Wait*. Deliver `wait` or `deny` to close the
+helper without a retirement call. The preview contains a fresh unique `requestId` created before it
+is shown. For retirement, return that `requestId` and echo the helper's original `item` object
+exactly with the explicit `retire` decision: `{"decision":"retire","requestId":"<the preview
+requestId>","preview":<the exact item>}`. The helper rejects a request ID from another preview or
+any changed field, and sends only that already-bound request ID and item's run, lineage, sequence,
+path, branch, commit and daemon-issued confirmation token through the held connection. An eligible item must include a nonempty `confirmationToken`. Keep it inside the exact preview and relay it to the daemon as `previewToken`. Never feed a decision object before the host
+has established its provenance.
+
+If the waiting process or socket disconnects, its outcome is unknown: report that honestly and do
+not retry. A new helper would create a new preview and requires a new human answer. An unknown
+method means the connected runtime is older and retirement is unavailable until that owner can be
+updated safely; do not restart a shared daemon. A daemon refusal after confirmation (including a
+stale sequence, changed identity, active work, dirty tree or unavailable Trash route) means no
+retirement was established; quote it and do not retry blindly.
+
+Report the returned `Outcome` exactly: request, run, lineage, original path, preserved ref,
+restore path, `removed`, `alreadyRetired`, and `diskSpaceReclaimed`. Do not say space was freed when
+`diskSpaceReclaimed` is false, and do not say the worktree is recoverable from Trash unless the
+returned recovery path establishes that. The daemon performs the validated handoff; the host must
+never delete a worktree or Trash item itself.
+
 ## Presenting progress and results
 
 Use this same workflow in the Codex desktop app and in terminal hosts; the current
