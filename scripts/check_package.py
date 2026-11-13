@@ -121,6 +121,12 @@ def main():
         require(not any(k in manifest for k in ("hooks", "mcpServers", "apps")),
                 "This package must not introduce hooks or server connections")
     require(re.fullmatch(r"\d+\.\d+\.\d+", portable["version"]), "Invalid package version")
+    plugin_readme = (plugin / "README.md").read_text()
+    require(f"Distribution package version: **{portable['version']}**" in plugin_readme,
+            "Plugin README package version mismatch")
+    compatibility = (ROOT / "docs/COMPATIBILITY.md").read_text()
+    require(f"| Plugin distribution | `{portable['version']}` in portable/Claude/Codex identities |"
+            in compatibility, "Compatibility guide package version mismatch")
     require(portable["license"] == claude["license"] == "MIT", "Expected MIT package metadata")
     require(codex["skills"] == "./skills/", "Incorrect Codex skill root")
     require((plugin / "skills/acp-control-plane/SKILL.md").is_file(), "Missing shared skill")
