@@ -1,10 +1,10 @@
 # Compatibility and release status
 
-Updated 2026-11-10. Public preview is available; broader installation acceptance is pending.
+Updated 2026-11-15. Public preview is available; broader installation acceptance is pending.
 
 | Component | Package expectation | Limit |
 |---|---|---|
-| Plugin distribution | `0.2.2` in portable/Claude/Codex identities | Independent of daemon and skill versions |
+| Plugin distribution | `0.2.3` in portable/Claude/Codex identities | Independent of daemon and skill versions |
 | Shared skill contract | `0.6.0`, recorded in skill metadata | Commands require matching runtime capabilities |
 | Runtime | Trusted CLI plus matching `acp-swift-checks` | Separate [preview asset](runtime-release.json); not bundled in plugin source |
 | Current public preview | macOS 26+; Apple Silicon CLI and matching arm64 analyzer | Locally tested on macOS 27; no Intel CLI, notarization or second-machine acceptance |

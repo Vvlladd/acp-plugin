@@ -256,10 +256,14 @@ def print_json(value):
 def run(args):
     client = RetentionClient(Path(args.socket) if args.socket else None, Path(args.repo), args.socket_fd)
     try:
-        inventory = validate_inventory(client.call("retention.inventory", {}))
         if args.action == "inventory":
+            inventory = validate_inventory(client.call("retention.inventory", {}))
             print_json({"type": "inventory", "repository": client.repository, **inventory})
             return 0
+        query = {"runId": args.run_id}
+        if args.lineage_id is not None:
+            query["lineageId"] = args.lineage_id
+        inventory = validate_inventory(client.call("retention.inventory", query))
         preview = select_item(inventory, args.run_id, args.lineage_id)
         request = request_from(preview)
         answer_path = prepare_answer_file(args.answer_file)

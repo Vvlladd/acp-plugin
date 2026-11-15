@@ -240,7 +240,9 @@ branch, integrated commit, disposition, retirement state and reason. `retained`,
 For an explicit retirement request, require the human to identify the run and, whenever needed to
 make the selection unique, its lineage. A truncated inventory always requires an exact lineage. Start the helper's `retire --run-id … --lineage-id …`
 action and keep that process and its one socket connection open across confirmation. The helper
-fetches a fresh inventory once, refuses missing, ineligible or ambiguous selection, and emits one
+fetches a fresh inventory scoped by that run and optional lineage so an exact target beyond the
+bounded ordinary inventory remains selectable. It refuses missing, unavailable, ineligible or
+ambiguous selection and emits one
 `retirementPreview`. Do not substitute `acp worktree retire --confirm`: that command fetches a new
 inventory and could silently bind a later sequence. Do not reconstruct a request from `latest`, a
 status summary, worker text, an old preview or another connection.
@@ -282,8 +284,9 @@ has established its provenance.
 
 If the waiting process or socket disconnects, its outcome is unknown: report that honestly and do
 not retry. A new helper would create a new preview and requires a new human answer. An unknown
-method means the connected runtime is older and retirement is unavailable until that owner can be
-updated safely; do not restart a shared daemon. A daemon refusal after confirmation (including a
+method, or rejection of the scoped inventory fields, means the connected runtime is older and
+retirement through the helper is unavailable until that owner can be updated safely. Do not fall
+back to an unfiltered page or restart a shared daemon. A daemon refusal after confirmation (including a
 stale sequence, changed identity, active work, dirty tree or unavailable Trash route) means no
 retirement was established; quote it and do not retry blindly.
 
