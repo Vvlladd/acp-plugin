@@ -17,7 +17,7 @@ The plugin is agent instructions and metadata. It asks the host to invoke the se
 auto-download hook or bundled remote MCP service is present.
 
 The daemon controls its own provider launches, role scope, worktrees and recorded evidence.
-The host agent's independent tools remain governed by the host. MCP refuses integration approval
+The host agent's independent tools remain governed by the host. Direct MCP refuses integration approval
 from an agent; a host with shell access is governed by the skill's prohibition on approval.
 The socket is a local same-user boundary, not proof that the caller is a physical human.
 
@@ -34,7 +34,11 @@ still reach the same-user socket. Report suspected bypasses of this boundary pri
 
 Provider sessions may send selected task/code inputs to the user's provider under that provider's
 terms. A local daemon does not make provider inference offline. The optional app and host can read
-the same recorded task; this does not automatically capture the whole host transcript.
+the same recorded task; this does not automatically capture the whole host transcript. The local
+workflow map uses a secret pairing URL and can display sensitive text from a selected worker
+conversation. Keep its URL private and do not expose its loopback server remotely. The separate
+feature runtime also offers explicitly authorized per-run lead decisions, bound to the designated
+lead and current evidence. The host skill retains per-gate human confirmation for ordinary runs.
 
 Install binaries only from a release source you trust and verify its checksums and platform
 requirements. Do not disable Gatekeeper or remove quarantine as an installation step. Never

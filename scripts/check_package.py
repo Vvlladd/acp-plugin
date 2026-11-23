@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the source-free host package without network access or provider calls."""
+"""Validate the host package and local viewer without network or provider calls."""
 
 import json
 from pathlib import Path
@@ -48,6 +48,12 @@ def check_confirmation_contract():
         require(phrase in flat, f"Skill lost confirmation rule: {phrase}")
     require("scripts/approval_contract.py" in flat,
             "Skill lost the shared read-only evidence helper")
+    for phrase in ("## Explicit per-run lead decisions", "humanSetupVersion", "--request-lead-approval",
+                   "--claim-file", "acp gate authorize-lead", "acp gate lead-evidence",
+                   "acp gate lead-resolve", "leadEvidence", "Direct MCP does not grant this authority",
+                   "Escalations and external verification decisions remain human decisions",
+                   "A denied, dismissed, timed-out or unavailable confirmation does not authorize"):
+        require(phrase in flat, f"Skill lost per-run lead decision rule: {phrase}")
     stale_phrases = ("in **their** shell", "relay the gate id and stop",
                      "Never run `acp gate approve`", "through your own terminal",
                      "approves through own CLI or Mac app", "via human CLI / app",
@@ -138,6 +144,15 @@ def main():
         actual.add(relative.as_posix())
     require(actual == set(names),
             f"Inventory mismatch: extra={sorted(actual-set(names))}, missing={sorted(set(names)-actual)}")
+
+    viewer = {
+        "README.md", "serve.mjs", "projection.mjs", "gate-review.mjs",
+        "public/app.js", "public/index.html", "public/style.css", "public/workflow-ui.mjs",
+        "test/browser-decisions.test.mjs", "test/gate-review.test.mjs",
+        "test/projection.test.mjs", "test/server.test.mjs",
+    }
+    require({n.removeprefix("workflow-map/") for n in actual if n.startswith("workflow-map/")} == viewer,
+            "Unexpected workflow-map files; review and update the explicit viewer inventory")
 
     plugin = ROOT / "plugins/acp"
     portable = read_json("plugins/acp/plugin.json")

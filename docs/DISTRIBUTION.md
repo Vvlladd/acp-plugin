@@ -2,7 +2,7 @@
 
 The [ACP core](https://github.com/Vvlladd/acp-core) is public under MIT: Rust CLI/daemon, MCP/socket
 interfaces, roles/prompts, schemas, tests and the matching Swift analyzer. This host plugin,
-commands, packaging scripts and documentation are also MIT. The optional Mac app remains private
+commands, workflow-map source, packaging scripts and documentation are also MIT. The optional Mac app remains private
 and is not included in either public repository. Provider tools/accounts have their own terms.
 
 MIT permits use, modification and redistribution, including commercial use, while requiring

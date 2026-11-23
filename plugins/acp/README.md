@@ -5,7 +5,8 @@ daemon. Read [the shared skill](skills/acp-control-plane/SKILL.md) for the opera
 The [Claude command](commands/acp.md) is a thin entry point to that same workflow.
 
 The compiled daemon and matching analyzer are external dependencies, not included or licensed
-by this package. The original conversation stays the lead. Agents must never approve integration.
+by this package. The original conversation stays the lead. Human approval is the default; a
+supporting runtime can grant that designated lead scoped decisions after explicit confirmation.
 No automatic download hook, daemon startup hook or MCP configuration is installed here.
 
 Distribution package version: **0.2.3**. Shared skill contract: **0.6.0**. They are independent

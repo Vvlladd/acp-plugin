@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ACP · Workflow</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/app.js" type="module"></script>
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="/" aria-label="ACP workflow home">
+        <span class="mark">a</span>
+        <b>ACP</b>
+        <span class="divider"> </span>Workflow</a
+      >
+      <span id="connection" class="connection">Connecting</span>
+      <button id="example">Explore example</button>
+    </header>
+    <main>
+      <aside class="rail">
+        <select id="runs" aria-label="Select run"></select>
+        <div id="runSummary"></div>
+      </aside>
+      <section id="canvas" aria-label="Interactive workflow map" tabindex="0">
+        <div id="notice" role="status"></div>
+        <div id="exampleBar" hidden>
+          <b>INTERACTIVE EXAMPLE</b>
+          <span>Simulated locally · no daemon writes</span>
+          <button id="play">Pause</button>
+          <button id="restart">Restart</button>
+          <button id="exit">Exit example</button>
+        </div>
+        <div id="world">
+          <svg id="edges" aria-label="Workflow connections">
+            <defs>
+              <marker
+                id="arrow"
+                markerUnits="userSpaceOnUse"
+                viewBox="0 0 8 8"
+                markerWidth="8"
+                markerHeight="8"
+                refX="7"
+                refY="4"
+                orient="auto"
+              >
+                <path d="M2 1.5 6 4 2 6.5" fill="none" stroke="#8c9cb5"
+                  stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+              </marker>
+            </defs>
+            <g id="lines"></g>
+          </svg>
+          <div id="nodes"></div>
+        </div>
+        <div id="empty">
+          <span class="empty-icon">◇</span>
+          <h2 id="emptyTitle">Connect to see your workflow</h2>
+          <p id="emptyText">
+            Pair this browser using the local launch URL. When ACP is available,
+            your runs and handoffs appear here.
+          </p>
+          <button id="emptyExample" class="primary">
+            Explore the interactive example →
+          </button>
+          <small
+            >The example stays in your browser. It cannot approve real
+            work.</small
+          >
+        </div>
+        <div class="canvas-bottom">
+          <span class="hint"
+            >Drag to pan · scroll to zoom · <kbd>F</kbd> fit ·
+            <kbd>Esc</kbd> clear</span
+          >
+          <div class="zoom">
+            <button id="zoomOut" aria-label="Zoom out">−</button>
+            <span id="zoomLabel">100%</span>
+            <button id="zoomIn" aria-label="Zoom in">+</button>
+            <button id="fit">Fit ↗</button>
+          </div>
+        </div>
+      </section>
+      <aside class="inspector">
+        <div class="eyebrow">
+          INSPECTOR <button id="clear" aria-label="Clear selection">×</button>
+        </div>
+        <div id="inspect">
+          <div class="inspect-empty">
+            <span>↖</span>
+            <h2>Inspect a workflow card</h2>
+            <p>
+              Select a card to see its identity, recorded status and next step.
+            </p>
+          </div>
+        </div>
+        <section class="activity">
+          <div class="eyebrow">
+            RECENT ACTIVITY <span id="activityCount"> </span>
+          </div>
+          <ol id="activity"></ol>
+        </section>
+      </aside>
+    </main>
+    <dialog id="confirm">
+      <form method="dialog">
+        <div class="eyebrow">HUMAN DECISION</div>
+        <h2 id="confirmTitle"></h2>
+        <p id="confirmText"></p>
+        <label for="feedback">Optional feedback</label>
+        <textarea id="feedback" rows="3" maxlength="4000"></textarea>
+        <p id="decisionError" role="alert"></p>
+        <div class="dialog-actions">
+          <button value="cancel">Cancel</button>
+          <button id="submitDecision" type="button" class="primary">
+            Confirm decision
+          </button>
+        </div>
+      </form>
+    </dialog>
+  </body>
+</html>

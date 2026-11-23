@@ -1,6 +1,6 @@
 ---
 description: Start ACP setup, run a task, inspect progress or stop the daemon from this Claude conversation.
-allowed-tools: Read, Write, Bash(git rev-parse --show-toplevel), Bash(acp --version), Bash(acp --help), Bash(acp start --help), Bash(acp doctor:*), Bash(acp status:*), Bash(acp delegate:*), Bash(acp plan:*), Bash(acp audit:*), Bash(acp up:*), Bash(acp down:*), Bash(acp stop:*), Bash(acp session:*), Bash(acp await:*), Bash(acp send:*), Bash(acp cancel:*), Bash(acp team get:*), Bash(acp team roles:*), Bash(acp team set:*), Bash(acp gate deny:*), Bash(${CLAUDE_PLUGIN_ROOT}/scripts/retention_contract.py:*)
+allowed-tools: Read, Write, Bash(git rev-parse --show-toplevel), Bash(acp --version), Bash(acp --help), Bash(acp start --help), Bash(acp doctor:*), Bash(acp status:*), Bash(acp delegate:*), Bash(acp plan:*), Bash(acp audit:*), Bash(acp up:*), Bash(acp down:*), Bash(acp stop:*), Bash(acp session:*), Bash(acp await:*), Bash(acp send:*), Bash(acp cancel:*), Bash(acp team get:*), Bash(acp team roles:*), Bash(acp team set:*), Bash(acp gate deny:*), Bash(acp gate authorize-lead:*), Bash(acp gate lead-evidence:*), Bash(acp gate lead-resolve:*), Bash(${CLAUDE_PLUGIN_ROOT}/scripts/retention_contract.py:*)
 argument-hint: [task description | status | stop]
 ---
 
@@ -21,7 +21,7 @@ never authorizes setup changes. Retain this conversation's host-bound lease acro
 release it when ending ACP use. Follow the shared skill's separate renewal/release procedure
 when attached to an older daemon that supports only expiring leases.
 
-**Never approve integration on your own judgment.** The human alone decides. Follow the shared
+In the ordinary workflow the human decides. Follow the shared
 skill's *Human integration confirmation*: ask through the host's own question tool when it is
 exposed and permitted (otherwise an explicit in-chat reply), never count a timeout,
 auto-continue or highlighted default, and relay only that fresh human approval of the exact
@@ -34,3 +34,6 @@ An explicit retained-worktree inventory or retirement request follows the shared
 *Retained worktree inventory and retirement* procedure. Keep its narrow helper connected while
 asking through the native host route; never use the draft CLI `--confirm` relay, delete a worktree
 directly, or infer confirmation from task completion or integration approval.
+
+For an explicit per-run lead opt-in on a supporting runtime, follow the shared skill's scoped
+claim and native confirmation procedure; `acp gate approve` remains the human decision path.

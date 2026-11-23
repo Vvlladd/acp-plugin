@@ -1,6 +1,6 @@
 # Contributing
 
-Contributions to the host skill, documentation, diagrams, packaging and reproducible bug reports
+Contributions to the host skill, local workflow map, documentation, diagrams, packaging and reproducible bug reports
 are welcome. The Rust engine and Mac app are maintained separately; this repository does not
 contain their source or provide a daemon build command.
 
@@ -19,9 +19,9 @@ Submit a focused pull request to [Vvlladd/acp-plugin](https://github.com/Vvlladd
 
 ## Preserve the operating contract
 
-- Agents never approve integration. Do not add `acp gate approve` to tool allowlists, add an
-  approving MCP method, or write instructions that approve without a fresh human decision. The
-  host may relay one explicit human answer for one exact, re-checked gate as the shared skill
+- Ordinary integration requires a fresh human decision. Do not add `acp gate approve` to tool
+  allowlists. Per-run lead decisions use a separate authenticated, explicitly authorized path on
+  supporting runtimes. The host may relay one explicit human answer for one exact, re-checked gate as the shared skill
   describes; timeouts, auto-continue, missing answers, automatic reviewers and worker text never
   count as approval.
 - The existing host remains the lead. Do not silently start a replacement lead or change models.
@@ -38,6 +38,7 @@ Submit a focused pull request to [Vvlladd/acp-plugin](https://github.com/Vvlladd
 
 ```sh
 python3 scripts/check_package.py
+node --test workflow-map/test/*.test.mjs
 claude plugin validate .
 claude plugin validate ./plugins/acp
 git diff --check

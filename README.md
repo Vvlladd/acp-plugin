@@ -20,6 +20,10 @@ macOS may block downloaded binaries. Read the [installation guide](docs/INSTALLA
 [Contribute](CONTRIBUTING.md) · [License scope](docs/DISTRIBUTION.md) ·
 [Final verification](docs/FINAL-VERIFICATION.md)
 
+The optional [local workflow map](workflow-map/README.md) is included as source. Its transcript
+and per-run lead-decision features require the separate acp-core feature runtime; the pinned
+preview installer has not been updated to provide them.
+
 ## Quick setup
 
 ```sh
@@ -145,13 +149,13 @@ sequenceDiagram
     Note over Human,Git: Landing the resulting branch on the main branch is a separate human action
 ```
 
-An agent must never approve integration. When a review gate is ready, the host asks the human in
+In the host skill's default workflow, an agent does not independently approve integration. When a review gate is ready, the host asks the human in
 its own UI — a native question prompt where the host permits one (Codex desktop
 `request_user_input_async`, Claude Code `AskUserQuestion`), otherwise an explicit chat reply — and relays only that fresh
 answer for the exact, re-checked gate through the existing `acp gate approve` CLI. A timeout,
 auto-continue, missing answer, automatic command reviewer or worker-authored text never counts.
 Your own shell and the optional Mac app remain fallbacks. Approval commits on the run branch only;
-landing on `main` and publishing stay separate. MCP refuses agent approval; on the skill's shell
+landing on `main` and publishing stay separate. Direct MCP refuses agent approval; on the skill's shell
 path this is an instruction boundary. The local socket identifies the OS user, not a physical human.
 See [security boundaries](SECURITY.md) before assuming stronger isolation between same-user processes.
 
@@ -169,6 +173,7 @@ acp-plugin/
 │   ├── commands/acp.md
 │   └── LICENSE                     # Retained when a host copies the plugin
 ├── docs/                            # Install, compatibility and release guidance
+├── workflow-map/                    # Optional local browser viewer and tests
 ├── scripts/install-runtime.sh       # Explicit download + checksum-verified install
 ├── scripts/check_package.py         # Local package checks; no downloads
 ├── CONTRIBUTING.md
@@ -181,7 +186,8 @@ boundary between the MIT core/plugin and private Mac app.
 
 ## Development
 
-With Python 3.10 or later, run `python3 scripts/check_package.py` from this repository. With
+With Python 3.10 or later, run `python3 scripts/check_package.py` from this repository. Run
+`node --test workflow-map/test/*.test.mjs` for the viewer (local socket access required). With
 Claude Code installed, run `claude plugin validate .` and
 `claude plugin validate ./plugins/acp`. Read [CONTRIBUTING.md](CONTRIBUTING.md) for scope and review.
 These checks do not start a daemon, run a model or prove installed runtime compatibility.

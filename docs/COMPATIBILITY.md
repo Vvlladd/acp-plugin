@@ -2,6 +2,12 @@
 
 Updated 2026-11-15. Public preview is available; broader installation acceptance is pending.
 
+The optional [workflow map](../workflow-map/README.md), transcript and per-run lead decisions
+target the separate [acp-core feature branch](https://github.com/Vvlladd/acp-core/tree/codex/live-workflow-map),
+pending publication and an exact runtime revision. The pinned preview is unchanged and does not
+provide those features. The host skill retains the per-gate human confirmation described below
+for ordinary runs, and documents the separately authorized per-run lead path for supporting runtimes.
+
 | Component | Package expectation | Limit |
 |---|---|---|
 | Plugin distribution | `0.2.3` in portable/Claude/Codex identities | Independent of daemon and skill versions |

@@ -31,6 +31,18 @@
     "scripts/install-runtime.sh",
     "scripts/setup.sh",
     "tests/test_native_approval_contract.py",
-    "tests/test_retention_contract.py"
+    "tests/test_retention_contract.py",
+    "workflow-map/README.md",
+    "workflow-map/gate-review.mjs",
+    "workflow-map/projection.mjs",
+    "workflow-map/public/app.js",
+    "workflow-map/public/index.html",
+    "workflow-map/public/style.css",
+    "workflow-map/public/workflow-ui.mjs",
+    "workflow-map/serve.mjs",
+    "workflow-map/test/browser-decisions.test.mjs",
+    "workflow-map/test/gate-review.test.mjs",
+    "workflow-map/test/projection.test.mjs",
+    "workflow-map/test/server.test.mjs"
   ]
 }
