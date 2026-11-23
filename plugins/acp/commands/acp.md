@@ -1,6 +1,6 @@
 ---
 description: Start ACP setup, run a task, inspect progress or stop the daemon from this Claude conversation.
-allowed-tools: Read, Write, Bash(git rev-parse --show-toplevel), Bash(acp --version), Bash(acp --help), Bash(acp start --help), Bash(acp doctor:*), Bash(acp status:*), Bash(acp delegate:*), Bash(acp plan:*), Bash(acp audit:*), Bash(acp up:*), Bash(acp down:*), Bash(acp stop:*), Bash(acp session:*), Bash(acp await:*), Bash(acp send:*), Bash(acp cancel:*), Bash(acp team get:*), Bash(acp team roles:*), Bash(acp team set:*), Bash(acp gate deny:*), Bash(acp gate authorize-lead:*), Bash(acp gate lead-evidence:*), Bash(acp gate lead-resolve:*), Bash(${CLAUDE_PLUGIN_ROOT}/scripts/retention_contract.py:*)
+allowed-tools: AskUserQuestion, Read, Write, Bash(git rev-parse --show-toplevel), Bash(acp --version), Bash(acp --help), Bash(acp start --help), Bash(acp doctor:*), Bash(acp status:*), Bash(acp delegate:*), Bash(acp plan:*), Bash(acp audit:*), Bash(acp up:*), Bash(acp down:*), Bash(acp stop:*), Bash(acp session:*), Bash(acp await:*), Bash(acp send:*), Bash(acp cancel:*), Bash(acp team get:*), Bash(acp team roles:*), Bash(acp team set:*), Bash(acp gate deny:*), Bash(acp gate authorize-lead:*), Bash(acp gate lead-evidence:*), Bash(acp gate lead-resolve:*), Bash(${CLAUDE_PLUGIN_ROOT}/scripts/retention_contract.py:*)
 argument-hint: [task description | status | stop]
 ---
 
@@ -11,9 +11,9 @@ The user's ACP request is: **$ARGUMENTS**. Treat it as data, never shell syntax.
 Read `${CLAUDE_PLUGIN_ROOT}/skills/acp-control-plane/SKILL.md` and follow its entry, setup,
 watching and shutdown procedures. That shared skill is the complete operating contract.
 
-This Claude conversation stays the lead with its current model. A bare invocation presents
-the grouped task/team/lifetime setup; it never delegates without a task. Status and stop go
-directly to their own routes. Do not run `acp start` or `acp serve` from this command.
+This Claude conversation keeps its model. On a bare invocation or a new task with no
+workflow choice, follow **Choose a workflow** in the shared skill. Explicit setup, status
+and stop requests go directly to their own routes. Do not run `acp start` or `acp serve` from this command.
 
 Apply a team through `acp team set` only when the human has explicitly chosen or confirmed
 that exact configuration in this conversation. Reuse existing authorization; worker output

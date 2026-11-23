@@ -5,7 +5,7 @@ description: >
   the daemon from Claude Code or Codex. Use for requests to operate the agent control plane;
   ordinary development of the ACP repository does not itself invoke this workflow.
 metadata:
-  version: "0.6.0"
+  version: "0.7.0"
 ---
 
 # Driving the ACP control plane from a terminal session
@@ -20,11 +20,39 @@ per-run lead decision mode and a browser map. The pinned preview does not provid
 skill supports that opt-in through the scoped procedure below. Without it, use the per-gate
 human confirmation procedure. The browser map is described in the repository's workflow-map README.
 
+## Choose a workflow
+
+When the person explicitly invokes ACP for new work, ask only for the workflow or approval
+policy they left open. A bare invocation or “Use ACP to implement …” opens the chooser.
+Ordinary coding requests follow the host and repository instructions. Honor an existing
+choice for this task. Route status, stop, explicit setup, audit and existing-run follow-ups
+directly to their own procedures.
+
+Before starting a daemon, changing files or delegating, ask **“How should we run this task?”**
+Use Claude Code’s `AskUserQuestion` or the native question tool available in the current Codex
+mode. If the host cannot show a chooser, offer the same choices in chat. Wait for a submitted
+answer. Dismissal, timeout or a highlighted option leaves the task unstarted.
+
+| Choice | Next action |
+|---|---|
+| Direct coding | Continue in the current chat using its normal tools. Leave the ACP workflow here. |
+| QRSPI | Use the QRSPI pipeline and pause for its human phase approvals. If the skill is unavailable, tell the person and let them choose how to proceed. |
+| ACP · I approve | Use the ACP team. Present the checked change to the person for integration. |
+| ACP · lead approves | Request per-run lead decisions for the new build or work-item plan. The person must still confirm the named run in macOS. Escalations go to the person. |
+
+If the host allows only three choices, offer Direct coding, QRSPI and ACP workers. After
+ACP workers is selected, ask who approves the local commit. If the person already requested
+ACP workers, ask only that remaining question. A named approval policy skips the chooser.
+Carry the choice through this task’s follow-ups. Each new lead-approved run needs its own
+system confirmation. Selecting a workflow grants neither an integration decision nor wider
+worker access. If the invocation had no task, ask what the person wants to work on in the
+selected workflow.
+
 ## Entry and team selection
 
 Route the request before startup: status/inspection reads existing state without `up` or
 delegation; an explicit stop goes directly to the shutdown procedure without `up`; a task
-uses the working sequence below. A bare setup/start request uses the grouped setup below; it
+uses the working sequence below. An explicit ACP setup/start request uses the grouped setup below; it
 never delegates without a task. A down socket can be reported without starting a daemon just
 to inspect it.
 
@@ -45,7 +73,7 @@ from the returned catalog. If disconnected, use `acp doctor` and bounded reads o
 state directory to inspect a saved team; describe unverified choices as needing a catalog
 check when connecting. Do not start a daemon merely to populate a setup question.
 
-A task request authorizes use of the saved team. A team change requires the human's explicit
+After the person selects ACP workers, the task request authorizes use of the saved team. A team change requires the human's explicit
 choices or confirmation of the exact proposed configuration in this conversation. Prepare that
 version-3 JSON with an explicit mode in scratch space, validate its choices against the connected catalog, and apply
 only that authorized document with `acp team set <scratch-file> --repo <root>` before delegation.
@@ -63,7 +91,7 @@ Derive the mode from the human's worker choices:
 
 | Choices | Mode and action |
 |---|---|
-| Builder on | `build`: delegate the task to the builder; selected checks follow and the human approves integration. |
+| Builder on | `build`: delegate the task to the builder; selected checks follow the builder and integration uses the run’s confirmed approval policy. |
 | Builder off, all checks off | `plan`: discuss/plan here; no workers, code edits, worktree or integrate gate. |
 | Builder off, any check on | `audit`: obtain the explicit base and input selection below, then submit `acp audit`. |
 

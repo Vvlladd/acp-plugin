@@ -24,6 +24,28 @@ The optional [local workflow map](workflow-map/README.md) is included as source.
 and per-run lead-decision features require the separate acp-core feature runtime; the pinned
 preview installer has not been updated to provide them.
 
+[![Example workflow map showing a completed builder and a pending human integration decision](docs/media/workflow-map.png)](docs/media/workflow-map.mp4)
+
+[Watch the example workflow map (6 seconds, MP4)](docs/media/workflow-map.mp4). The replay
+shows the animated handoff from the lead to the builder and the human integration decision.
+
+## Choose a workflow in Codex or Claude
+
+In a fresh local chat, invoke the **acp-control-plane** skill in Codex or type `/acp:acp`
+in Claude Code. For a new task with no workflow specified, the skill asks **How should we
+run this task?** in the host’s question picker. Hosts without a picker ask in chat.
+
+| Choose | Who does the work and who decides |
+|---|---|
+| Direct coding | Your current chat implements the task with its native tools. |
+| QRSPI | The QRSPI plugin guides the phases and pauses for your approval at each one. |
+| ACP · I approve | The lead delegates to ACP workers and brings you the checked change for approval. |
+| ACP · lead approves | After you confirm the named run in macOS, the lead can decide plans and approve the verified local worktree commit. Escalations still come to you. |
+
+You can skip the picker by naming your choice, for example, **“Use ACP workers for this
+task and ask me before integration.”** Ordinary chats follow their existing project
+instructions. Status checks and follow-ups continue directly.
+
 ## Quick setup
 
 ```sh

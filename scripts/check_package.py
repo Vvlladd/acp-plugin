@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Validate the host package and local viewer without network or provider calls."""
 
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -10,6 +11,13 @@ from urllib.parse import unquote
 
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+# These reviewed README assets are the only binary files in the source inventory.
+README_MEDIA = {
+    "docs/media/workflow-map.mp4": "9aba922830b36ff50fa48c6cb2ec24b362170856991f5e83587b280c736e885b",
+    "docs/media/workflow-map.png": "3dbd6b09c743d8128c47ba393ca8cf4188abbad0ccab2aa6058366b452d3959a",
+}
 
 
 def require(condition, message):
@@ -140,7 +148,12 @@ def main():
         require(path.is_file(), f"Nonregular file: {relative}")
         require(path.suffix not in {".rs", ".swift", ".dylib", ".zip", ".bin"},
                 f"Runtime/source artifact not allowed: {relative}")
-        path.read_text(encoding="utf-8")
+        if relative.as_posix() in README_MEDIA:
+            with path.open("rb") as media:
+                digest = hashlib.sha256(media.read()).hexdigest()
+            require(digest == README_MEDIA[relative.as_posix()], f"README media changed: {relative}")
+        else:
+            path.read_text(encoding="utf-8")
         actual.add(relative.as_posix())
     require(actual == set(names),
             f"Inventory mismatch: extra={sorted(actual-set(names))}, missing={sorted(set(names)-actual)}")
