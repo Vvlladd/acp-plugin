@@ -1,6 +1,6 @@
 # ACP runtime license
 
-For runtime `0.1.0-preview.20261012` and the public core source, original ACP code is provided under
+For runtime `0.1.0-preview.20261123` and the public core source, original ACP code is provided under
 the MIT license below. This includes the CLI/daemon and original Swift analyzer. Dependencies
 retain their own licenses; retain the notices included in the binary archive when redistributing.
 The separately maintained private Mac app is not licensed by this file. Provider software and

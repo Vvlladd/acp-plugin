@@ -10,7 +10,7 @@ MIT. The skill needs the installed daemon. The optional Mac app remains private 
 required. Provider access and usage come from your own accounts.
 
 **Release status:** the free compiled daemon/helper is available as an
-[Apple Silicon preview](https://github.com/Vvlladd/acp-core/releases/tag/runtime-v0.1.0-preview.20261012).
+[Apple Silicon preview](https://github.com/Vvlladd/acp-core/releases/tag/runtime-v0.1.0-preview.20261123).
 The Mac app is optional and is not included. This preview is ad hoc signed and **not notarized**;
 macOS may block downloaded binaries. Read the [installation guide](docs/INSTALLATION.md) and
 [signing status](docs/SIGNING.md) before installing.
@@ -20,9 +20,8 @@ macOS may block downloaded binaries. Read the [installation guide](docs/INSTALLA
 [Contribute](CONTRIBUTING.md) · [License scope](docs/DISTRIBUTION.md) ·
 [Final verification](docs/FINAL-VERIFICATION.md)
 
-The optional [local workflow map](workflow-map/README.md) is included as source. Its transcript
-and per-run lead-decision features require the separate acp-core feature runtime; the pinned
-preview installer has not been updated to provide them.
+The November preview supports worker transcripts and per-run lead decisions. Start the
+optional browser map from this repository to follow a task. [Workflow map guide](workflow-map/README.md)
 
 [![Example workflow map showing a completed builder and a pending human integration decision](docs/media/workflow-map.png)](docs/media/workflow-map.mp4)
 

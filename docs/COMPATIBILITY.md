@@ -1,23 +1,19 @@
 # Compatibility and release status
 
-Updated 2026-11-15. Public preview is available; broader installation acceptance is pending.
-
-The optional [workflow map](../workflow-map/README.md), transcript and per-run lead decisions
-target the separate [acp-core feature branch](https://github.com/Vvlladd/acp-core/tree/codex/live-workflow-map),
-pending publication and an exact runtime revision. The pinned preview is unchanged and does not
-provide those features. The host skill retains the per-gate human confirmation described below
-for ordinary runs, and documents the separately authorized per-run lead path for supporting runtimes.
+Updated 2026-11-23. The November Apple Silicon preview supports the browser map’s worker
+transcripts and per-run lead approvals. Ordinary runs ask the person before integration.
+[Release manifest](runtime-release.json) · [Workflow map](../workflow-map/README.md)
 
 | Component | Package expectation | Limit |
 |---|---|---|
-| Plugin distribution | `0.2.4` in portable/Claude/Codex identities | Independent of daemon and skill versions |
+| Plugin distribution | `0.2.5` in portable/Claude/Codex identities | Independent of daemon and skill versions |
 | Shared skill contract | `0.7.0`, recorded in skill metadata | Commands require matching runtime capabilities |
 | Runtime | Trusted CLI plus matching `acp-swift-checks` | Separate [preview asset](runtime-release.json); not bundled in plugin source |
 | Current public preview | macOS 26+; Apple Silicon CLI and matching arm64 analyzer | Locally tested on macOS 27; no Intel CLI, notarization or second-machine acceptance |
 | Host workflow | Existing local Claude Code/Codex chat with shell execution | No browser-only runtime; does not change the host's model |
 | Worker selection | Returned `acp team roles` catalog and valid saved team | No arbitrary model/flag passthrough |
-| Codex writing-worker sandbox evidence | Measured at `codex-cli 0.132.0` | Doctor warns on drift; `0.153.0` lead support does not establish writer sandbox parity |
-| Daemon-spawned Codex lead | Exactly `codex-cli 0.153.0` in the current engine profile | Separate from using an existing host conversation as lead |
+| Codex writing-worker sandbox evidence | Measured at `codex-cli 0.132.0` | Doctor warns on drift; `0.171.0-alpha.13` lead support does not establish writer sandbox parity |
+| Daemon-spawned Codex lead | Exactly `codex-cli 0.171.0-alpha.13` in the November preview | Separate from using an existing host conversation as lead |
 | Human integration confirmation | Host question tool when exposed and permitted, else explicit chat reply; unchanged `acp gate approve` relay | Instruction boundary, not attestation; see below |
 | Optional Mac app | Matching binary/protocol capabilities | Separate package; not needed for the host skill; approval fallback only |
 
@@ -106,6 +102,10 @@ that a physical person answered. `FakeHost` uses a typed native-callback object 
 arbitrary event payloads; that test type is not an attestation a real host may accept from JSON or
 prose. Real provenance stays at the current host's native-response
 boundary, and fresh-host/cross-host walkthrough acceptance remains unverified.
+
+## November 23 preview verification
+
+The current installer and its public download were exercised on Apple Silicon running macOS 27.2.1. [Results and external acceptance checklist](FINAL-VERIFICATION.md#november-23-apple-silicon-release)
 
 ## Historical October 11 publication smoke checks
 

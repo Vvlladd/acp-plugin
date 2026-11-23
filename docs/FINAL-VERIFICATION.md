@@ -1,11 +1,19 @@
-> Updated direction, 2026-10-12: the new MIT core/runtime is linked from the installation guide.
-> The checklist remains open for external/fresh-host acceptance; source/local checks are separate.
+# Free preview verification
 
-# Free preview: final verification
+## November 23 Apple Silicon release
 
-The plugin and compiled runtime preview are public. This checklist records the remaining
-checks before describing a release as broadly accepted or notarized.
-It contains no paid-pilot or subscription setup.
+On macOS 27.2.1, the installer downloaded the public November ZIP anonymously, verified its
+SHA-256 and installed the CLI and analyzer in a disposable directory. The downloaded daemon
+reported `humanSetupVersion: 2` and Doctor completed with zero failures and two warnings about
+dated model pricing and the Codex writer sandbox version. The October and November packages
+could be selected side by side. Six installer tests covered valid installation, checksum
+rejection, existing and symlink destinations, Git checkout refusal and quarantine preservation.
+Both executables are ad hoc signed.
+[Release and checksums](https://github.com/Vvlladd/acp-core/releases/tag/runtime-v0.1.0-preview.20261123)
+
+## External acceptance checklist
+
+Use these steps to record results on a new machine and in fresh host sessions.
 
 - [ ] On a test Mac, record macOS, architecture, host CLI versions and package hashes.
 - [ ] Inspect the MIT license and included dependency notices.
@@ -30,5 +38,4 @@ It contains no paid-pilot or subscription setup.
       while preserving local history. Do not run two daemon owners for one repository.
 - [ ] Record results, limitations and supported platforms. Use these observations for the next accepted release and supported-platform claims.
 
-The October 12 package contains an Apple Silicon CLI and matching arm64 analyzer.
 An official marketplace directory submission is optional and separate from this GitHub catalog.

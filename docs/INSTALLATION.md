@@ -1,6 +1,6 @@
 # Install the free daemon and plugin
 
-The [compiled runtime preview](https://github.com/Vvlladd/acp-core/releases/tag/runtime-v0.1.0-preview.20261012)
+The [compiled runtime preview](https://github.com/Vvlladd/acp-core/releases/tag/runtime-v0.1.0-preview.20261123)
 is available for Apple Silicon Macs running macOS 26 or later. Local checks ran on macOS 27;
 second-machine and broader OS acceptance remain pending. It includes the daemon/CLI and matching
 analyzer. **The Mac app and Rust toolchain are not required.** Provider access is your own.
@@ -47,7 +47,7 @@ another installation. It uses built-in macOS tools; no Python or Cargo is needed
 The original core and plugin are MIT; keep their license and bundled third-party notices.
 Read the [runtime license](RUNTIME-TERMS.md).
 
-For an already downloaded ZIP, pass `--archive /absolute/path/to/ACP-runtime-0.1.0-preview.20261012-macos-arm64.zip`.
+For an already downloaded ZIP, pass `--archive /absolute/path/to/ACP-runtime-0.1.0-preview.20261123-macos-arm64.zip`.
 For a different install location, pass `--install-root /absolute/path/outside/your/repositories`.
 Existing version folders are refused. The [release manifest](runtime-release.json) records the
 asset URL, architecture, tested OS and checksum.
@@ -55,7 +55,7 @@ asset URL, architecture, tested OS and checksum.
 With the default location, activate it in this terminal:
 
 ```sh
-export PATH="$HOME/Library/Application Support/ACP/runtimes/0.1.0-preview.20261012:$PATH"
+export PATH="$HOME/Library/Application Support/ACP/runtimes/0.1.0-preview.20261123:$PATH"
 command -v acp
 acp --version
 ```

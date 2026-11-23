@@ -1,15 +1,16 @@
 {
-  "releaseId": "0.1.0-preview.20261012",
-  "tag": "runtime-v0.1.0-preview.20261012",
-  "asset": "ACP-runtime-0.1.0-preview.20261012-macos-arm64.zip",
-  "downloadUrl": "https://github.com/Vvlladd/acp-core/releases/download/runtime-v0.1.0-preview.20261012/ACP-runtime-0.1.0-preview.20261012-macos-arm64.zip",
-  "sha256": "380980d3f88afd915e808f3483f2aeea822277c9be324a70bd2974dce5448e68",
+  "releaseId": "0.1.0-preview.20261123",
+  "tag": "runtime-v0.1.0-preview.20261123",
+  "asset": "ACP-runtime-0.1.0-preview.20261123-macos-arm64.zip",
+  "downloadUrl": "https://github.com/Vvlladd/acp-core/releases/download/runtime-v0.1.0-preview.20261123/ACP-runtime-0.1.0-preview.20261123-macos-arm64.zip",
+  "sha256": "e99f596484ec4d794298b13a4a32d82cab2de20e95c08c77d82717013574bff2",
   "architecture": "arm64",
   "minimumMacOS": "26",
-  "testedMacOS": "27.0",
+  "testedMacOS": "27.2.1",
   "signing": "ad-hoc",
   "notarized": false,
   "license": "MIT",
   "sourceRepository": "https://github.com/Vvlladd/acp-core",
-  "analyzerArchitecture": "arm64"
+  "analyzerArchitecture": "arm64",
+  "sourceRevision": "25e33240d2724c0a0e4a378b1f3ed705d35bc39d"
 }

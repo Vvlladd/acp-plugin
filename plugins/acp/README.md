@@ -9,7 +9,7 @@ by this package. The original conversation stays the lead. Human approval is the
 supporting runtime can grant that designated lead scoped decisions after explicit confirmation.
 No automatic download hook, daemon startup hook or MCP configuration is installed here.
 
-Distribution package version: **0.2.4**. Shared skill contract: **0.7.0**. They are independent
+Distribution package version: **0.2.5**. Shared skill contract: **0.7.0**. They are independent
 of the daemon version. Provider usage comes from the user's own provider accounts.
 
 Copyright and permissions: [MIT license](LICENSE).

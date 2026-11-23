@@ -15,10 +15,9 @@ an audit inspects existing work without integration, and planning can use this c
 without workers. On a supporting runtime a person may explicitly authorize this designated lead
 to decide plans and verified local integration for one run. Escalations stay with the human.
 
-The separate acp-core `codex/live-workflow-map` feature revision introduces an optional
-per-run lead decision mode and a browser map. The pinned preview does not provide them. This
-skill supports that opt-in through the scoped procedure below. Without it, use the per-gate
-human confirmation procedure. The browser map is described in the repository's workflow-map README.
+The November 23 runtime preview supports per-run lead decisions and worker transcripts in
+the browser map. Check the connected daemon’s capabilities before requesting a grant.
+Use human integration confirmation for ordinary runs.
 
 ## Choose a workflow
 
