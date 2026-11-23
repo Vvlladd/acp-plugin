@@ -1,8 +1,8 @@
 # ACP — keep your conversation, coordinate the work
 
-Use ACP from an existing **Claude Code or Codex conversation** to coordinate selected workers,
-inspect their evidence and return the integration decision to you. The optional Mac app shows
-the same local task and history.
+Delegate work from the **Claude Code or Codex conversation you already use**. Choose which
+tests and reviews must pass and who can approve the result. ACP creates a local commit in
+the task worktree from the exact change approved for that run.
 
 **Free and MIT:** this repository supplies the host plugin and installer. The
 [Rust core and matching Swift analyzer](https://github.com/Vvlladd/acp-core) are also public under
@@ -38,13 +38,22 @@ run this task?** in the host’s question picker. Hosts without a picker ask in 
 | Choose | Who does the work and who decides |
 |---|---|
 | Direct coding | Your current chat implements the task with its native tools. |
-| QRSPI | The QRSPI plugin guides the phases and pauses for your approval at each one. |
+| QRSPI | You approve the requirements, research, design and task plan before implementation, then review each completed task. |
 | ACP · I approve | The lead delegates to ACP workers and brings you the checked change for approval. |
 | ACP · lead approves | After you confirm the named run in macOS, the lead can decide plans and approve the verified local worktree commit. Escalations still come to you. |
 
-You can skip the picker by naming your choice, for example, **“Use ACP workers for this
-task and ask me before integration.”** Ordinary chats follow their existing project
-instructions. Status checks and follow-ups continue directly.
+**When you want to shape the work up front**, choose QRSPI in the picker or say
+**“Use QRSPI for this feature.”** Install the separate QRSPI plugin in your host to use
+this option. Its phase approvals stay with you. [QRSPI plugin](https://github.com/Vvlladd/qrspi-orchestrator)
+
+**When you want to delegate a defined task**, you can say **“Keep Claude as lead, use Codex
+as the builder, run the tests, and let the lead approve this run.”** Suppose Codex edits a
+file after the tests pass. ACP rejects the old evidence and requires the selected checks
+for the revised patch before the lead can approve it. ACP records who approved the change.
+If the lead retries after losing the reply, it gets the original commit back.
+[Per-run approval contract](https://github.com/Vvlladd/acp-core/blob/5a38b0965cbf7617a7ad81162faa360d3fd4ac77/docs/PROTOCOL.md#lead-approval-for-one-run)
+
+Ordinary chats follow their existing project instructions. Status checks and follow-ups continue directly.
 
 ## Quick setup
 
