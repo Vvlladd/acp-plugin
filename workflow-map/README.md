@@ -6,13 +6,18 @@ decisions. The map is MIT licensed under this repository's [license](../LICENSE)
 
 ## Runtime requirement
 
-The published `0.1.0-preview.20261012` installer remains pinned to its original runtime and does
-not include the map's transcript or lead-decision features. This source package targets the
-separate [acp-core feature branch](https://github.com/Vvlladd/acp-core/tree/codex/live-workflow-map);
-that branch and its exact revision must be available and built before using these features. It is
-not a released or installed runtime. Follow the core's source installation instructions for the
-matching CLI and analyzer, and check the connected daemon's capabilities. An older running daemon
-does not acquire features when a new CLI is installed.
+The map's worker transcripts and lead decisions require the compatible source runtime. The
+binary installer still distributes the earlier `0.1.0-preview.20261012` release. Build the
+verified revision with the core's source installer on a supported Mac. [Runtime source and prerequisites](https://github.com/Vvlladd/acp-core/tree/5a38b0965cbf7617a7ad81162faa360d3fd4ac77)
+
+```sh
+git clone --branch codex/live-workflow-map https://github.com/Vvlladd/acp-core.git
+git -C acp-core checkout --detach 5a38b0965cbf7617a7ad81162faa360d3fd4ac77
+bash acp-core/scripts/install-source.sh
+```
+
+Use the PATH line printed by the installer. Start the repository daemon with that runtime.
+An already running daemon continues using its original executable until restarted.
 
 ## Start
 
