@@ -117,3 +117,13 @@ test("demo decisions publish distinct actual statuses and readable gate wait", (
   assert.equal(context.exampleDecisionOutcome("approve").status, "approved");
   assert.equal(context.statusLabel("awaiting_gate"), "Awaiting approval");
 });
+
+test("gate controls require a pending decision in both the map and the fresh evidence", () => {
+  const pending = {status:"pending"};
+  assert.equal(context.gatePresentation(pending, pending), "human");
+  assert.equal(context.gatePresentation({...pending, awaitingLead:true}, pending), "lead");
+  for (const status of ["approved", "denied", "resolving", "queued"]) {
+    assert.equal(context.gatePresentation({status}, pending), "recorded");
+    assert.equal(context.gatePresentation(pending, {status}), "recorded");
+  }
+});

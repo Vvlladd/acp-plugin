@@ -7,7 +7,7 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const DIFF_LIMIT = 8 * 1024 * 1024;
 const O_NOFOLLOW_ANY = 0x20000000; // Darwin sys/fcntl.h
 
-async function openEvidence(root, components) {
+export async function openEvidence(root, components) {
   const canonicalRoot = await realpath(root);
   const flags = constants.O_RDONLY | constants.O_NONBLOCK;
   if (process.platform === 'darwin') {

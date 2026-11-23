@@ -62,4 +62,9 @@ On November 23, 2026, two disposable status-page repositories exercised the pair
 | Codex GPT-6.2 Sol | Codex GPT-6.1 Terra | The lead approved the delegated task after a follow-up. |
 | Claude Opus 5.5 | Claude Sonnet 5.5 | The lead approved the task in the same conversation after the builder reported its check. |
 
+For Claude attempts, the viewer reads the native model ID from the initialization header so it
+can display the version used in that run. When that ID is unavailable, it labels the configured
+alias. A completed decision shows its recorded outcome, commit and run models. The decision
+record holds the original gate summary.
+
 Both builders ran the fixture's Python check. Re-running it from each resulting Git commit passed. Both tests selected only a lead and a builder. A separate verifier or reviewer can be selected when needed.

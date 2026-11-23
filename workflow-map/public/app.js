@@ -5,6 +5,7 @@ import {
   orderWorkflow,
   statusLabel,
   conversationTarget,
+  gatePresentation,
 } from "./workflow-ui.mjs";
 ("use strict");
 const $ = (id) => document.getElementById(id);
@@ -490,19 +491,15 @@ function render(reset = false) {
       el("span", n.title, "node-title"),
       el(
         "span",
-        [
-          n.subtitle,
-          ...(n.details || [])
-            .filter((d) => /provider|model/i.test(d.label))
-            .map((d) => d.value),
-        ]
-          .filter(Boolean)
-          .join(" · "),
+        n.kind === "agent" && !demo
+          ? n.details.find(d => d.label === "Model")?.value || n.subtitle
+          : [n.subtitle, ...(n.details || []).filter(d => /provider|model/i.test(d.label)).map(d => d.value)]
+              .filter(Boolean).join(" · "),
         "subtitle",
       ),
     );
     if (n.kind === "gate" && waiting(n.status))
-      b.append(el("span", "Review decision →", "gate-callout"));
+      b.append(el("span", n.awaitingLead ? "Waiting for the lead" : "Review decision →", "gate-callout"));
     b.onclick = () => select(n.id);
     $("nodes").append(b);
   }
@@ -861,6 +858,28 @@ function inspect() {
     box.append(b);
   }
   if (n.kind === "gate" && n.gateId) {
+    if (n.status !== "pending") {
+      if (n.status === "approved" || n.status === "denied") {
+        uncertain.delete(n.gateId);
+        if (!demo) {
+          const history = el("details");
+          const identifiers = el("dl");
+          identifiers.append(el("dt", "Run"), el("dd", runId), el("dt", "Gate"), el("dd", n.gateId));
+          history.append(el("summary", "Decision record"), identifiers);
+          history.addEventListener("toggle", async () => {
+            if (!history.open) return;
+            try {
+              const record = await requestGate(n.gateId);
+              if (epoch === gateEpoch && record.summary) history.append(el("p", record.summary));
+            } catch {
+              if (epoch === gateEpoch) history.append(el("p", "Recorded summary unavailable."));
+            }
+          }, {once: true});
+          box.append(history);
+        }
+      }
+      return;
+    }
     box.append(el("p", "Loading current decision evidence…"));
     loadGate(n, epoch);
   }
@@ -906,7 +925,19 @@ async function loadGate(n, epoch) {
   const box = $("inspect");
   box.lastChild?.textContent === "Loading current decision evidence…" &&
     box.lastChild.remove();
-  box.append(el("p", g.summary), el("p", g.consequence, "warning"));
+  const presentation = gatePresentation(n, g);
+  if (presentation === "recorded") {
+    box.append(el("p", "Decision status: " + statusLabel(g.status)));
+    if (g.status === "approved" || g.status === "denied") uncertain.delete(g.id);
+    return;
+  }
+  let review = box;
+  if (presentation === "lead") {
+    review = el("details");
+    review.append(el("summary", "Review as a person"));
+    box.append(review);
+  }
+  review.append(el("p", g.summary), el("p", g.consequence, "warning"));
   const dl = el("dl");
   for (const [a, b] of [
     ["Run", g.runId],
@@ -915,8 +946,8 @@ async function loadGate(n, epoch) {
     ["Frozen diff SHA-256", g.diffHash],
   ])
     if (b) dl.append(el("dt", a), el("dd", b));
-  box.append(dl);
-  if (g.files?.length) box.append(el("p", "Files: " + g.files.join(", ")));
+  review.append(dl);
+  if (g.files?.length) review.append(el("p", "Files: " + g.files.join(", ")));
   if (g.diff != null) {
     const d = el("details");
     d.open = true;
@@ -924,13 +955,11 @@ async function loadGate(n, epoch) {
       el("summary", "Frozen diff · review before deciding"),
       el("pre", g.diff),
     );
-    box.append(d);
+    review.append(d);
   }
-  if (g.reason) box.append(el("p", g.reason, "warning"));
-  if (!waiting(g.status) && !active(g.status) && g.status !== "queued")
-    uncertain.delete(g.id);
+  if (g.reason) review.append(el("p", g.reason, "warning"));
   if (uncertain.has(g.id)) {
-    box.append(
+    review.append(
       el(
         "p",
         "Decision submitted. Outcome is uncertain; check daemon status before taking further action.",
@@ -971,7 +1000,7 @@ async function loadGate(n, epoch) {
     };
     actions.append(b);
   }
-  box.append(actions);
+  review.append(actions);
 }
 // Decision helpers are pure so payload and failure semantics can be checked independently.
 

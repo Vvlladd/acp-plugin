@@ -7,6 +7,7 @@ import { homedir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { projectWorkflow } from './projection.mjs';
+import { reportedModels } from './reported-models.mjs';
 import { reviewGate } from './gate-review.mjs';
 
 const ASSETS = new Map([
@@ -128,7 +129,8 @@ export async function createWorkflowServer({
     rowOnly = false;
   const clients = new Set(),
     decisions = new Map(),
-    sessions = new Map();
+    sessions = new Map(),
+    modelCache = new Map();
   const socketPath = path.join(actualState, 'acp.sock');
   let host;
   function publish(targets = clients) {
@@ -166,7 +168,9 @@ export async function createWorkflowServer({
         )
       )
         throw new Error('invalid snapshot');
-      const projected = projectWorkflow(value, [...events, ...value.events]);
+      const modelIds = await reportedModels(value, actualState, modelCache);
+      if (rpc !== current || stopped) throw new Error('connection changed');
+      const projected = projectWorkflow(value, [...events, ...value.events], modelIds);
       if (!projected || !Array.isArray(projected.runs)) throw new Error('invalid projection');
       snapshot = value;
       projectedRuns = projected.runs;

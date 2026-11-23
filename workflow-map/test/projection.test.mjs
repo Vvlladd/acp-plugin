@@ -83,7 +83,7 @@ test('attributes recorded authority and preserves worker identity without stream
   }).runs[0];
   assert.equal(result.nodes.find((n) => n.kind === 'run').leadApproved, true);
   assert.equal(result.nodes.find((n) => n.kind === 'agent').agentId, agentId);
-  assert.equal(result.nodes.find((n) => n.kind === 'gate').subtitle, 'Lead decision');
+  assert.equal(result.nodes.find((n) => n.kind === 'gate').subtitle, 'Approved by the lead');
   assert.match(result.activity[0].label, /Lead/);
   assert.ok(!JSON.stringify(result).includes('secret'));
 });
@@ -124,7 +124,7 @@ test('approved integrations show the recorded local commit and keep free text ou
       {runId: 'r', seq: 2, kind: 'worker.message', text: 'private text'}],
   }).runs[0];
   const gate = view.nodes.find(n => n.gateId === 'g');
-  assert.equal(gate.subtitle, 'Lead decision');
+  assert.equal(gate.subtitle, 'Approved by the lead');
   assert.deepEqual(gate.details, [{label: 'Local commit', value: commit}]);
   assert.deepEqual(view.nodes.find(n => n.gateId === 'p').details, []);
   assert.ok(view.activity.some(item => item.label.includes(commit.slice(0, 10))));
@@ -269,4 +269,19 @@ test('does not link to a run beyond the cap', () => {
   assert.ok(
     !p.runs.find((run) => run.id === 'r000').nodes.some((node) => node.targetRunId === 'r101'),
   );
+});
+
+test('gate records identify both run models and distinguish unresolved aliases', () => {
+  const runId = 'child';
+  const snapshot = {runs: [{runId:'parent'}, {runId, execution:{leadOwnerRunId:'parent'}, steps:{review:false}}],
+    agents: [{runId:'parent',agentId:'l',role:'lead',provider:'claude',model:'opus'},
+      {runId,agentId:'b',role:'builder',provider:'claude',model:'sonnet'}],
+    attempts: [{runId:'parent',agentId:'l',attemptId:'one'}, {runId,agentId:'b',attemptId:'two'}],
+    gates: [{runId, gateId:'g', kind:'integrate', status:'approved', resolvedBy:'lead', leadDecision:true}]};
+  const models = new Map([['parent/one','claude-opus-5-5'],['child/two','claude-sonnet-5-5']]);
+  const details = () => Object.fromEntries(projectWorkflow(snapshot, [], models).runs.find(r => r.id === runId)
+    .nodes.find(n => n.kind === 'gate').details.map(d => [d.label,d.value]));
+  assert.deepEqual(details(), {'Run lead':'Claude Opus 5.5','Run builder':'Claude Sonnet 5.5','Separate reviewer':'Not selected'});
+  models.clear();
+  assert.equal(details()['Run builder'], 'Claude Sonnet (configured alias)');
 });

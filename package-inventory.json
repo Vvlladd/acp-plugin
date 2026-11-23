@@ -39,6 +39,7 @@
     "workflow-map/public/index.html",
     "workflow-map/public/style.css",
     "workflow-map/public/workflow-ui.mjs",
+    "workflow-map/reported-models.mjs",
     "workflow-map/serve.mjs",
     "workflow-map/test/browser-decisions.test.mjs",
     "workflow-map/test/gate-review.test.mjs",

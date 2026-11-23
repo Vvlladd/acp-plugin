@@ -106,3 +106,29 @@ test('plan, escalation and unknown decisions expose supported actions', async ()
   assert.equal(unknown.canApprove, false);
   assert.equal(unknown.canDeny, false);
 });
+
+test('Claude versions come only from a linked attempt’s bounded initialization header', async () => {
+  const { reportedModels } = await import('../reported-models.mjs');
+  const f = await fixture();
+  try {
+    const dir = path.join(f.root, 'runs', runId.replaceAll('-', ''), 'attempts', attemptId.replaceAll('-', ''));
+    await mkdir(dir, {recursive: true});
+    const file = path.join(dir, 'stdout.jsonl');
+    const snapshot = {agents:[{runId, agentId: gateId, provider:'claude'}], attempts:[{runId, agentId:gateId, attemptId}]};
+    const read = () => reportedModels(snapshot, f.root, new Map());
+    const header = JSON.stringify({type:'system', subtype:'init', model:'claude-opus-5-5', extra:'private'});
+    await writeFile(file, header + '\n' + JSON.stringify({model:'private', text:'private'}));
+    assert.deepEqual([...(await read()).values()], ['claude-opus-5-5']);
+    for (const invalid of ['{}\n' + header + '\n', header, ' '.repeat(16384) + header + '\n',
+      header.replace('claude-opus-5-5', 'private'), header.replace('"system"', '"assistant"')]) {
+      await writeFile(file, invalid);
+      assert.equal((await read()).size, 0);
+    }
+    await rename(file, file + '.elsewhere');
+    await writeFile(file + '.elsewhere', header + '\n');
+    await symlink(file + '.elsewhere', file);
+    assert.equal((await read()).size, 0);
+  } finally {
+    await rm(f.root, {recursive:true, force:true});
+  }
+});

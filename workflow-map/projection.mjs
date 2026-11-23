@@ -86,7 +86,17 @@ function activityLabel(event, agents, attempts) {
   }
 }
 
-export function projectWorkflow(snapshot = {}, events = []) {
+function modelName(agent, reportedId) {
+  if (agent.provider === 'claude') {
+    const match = /^claude-(opus|sonnet|haiku|fable)-(\d+)-(\d+)(?:-(\d{8}))?$/.exec(reportedId || agent.model);
+    if (match) return `Claude ${match[1][0].toUpperCase()}${match[1].slice(1)} ${match[2]}.${match[3]}${match[4] ? ' (' + match[4] + ')' : ''}`;
+  }
+  if (agent.provider === 'claude' && ['opus', 'sonnet', 'haiku', 'fable'].includes(agent.model))
+    return `Claude ${agent.model[0].toUpperCase()}${agent.model.slice(1)} (configured alias)`;
+  return typed(agent.model);
+}
+
+export function projectWorkflow(snapshot = {}, events = [], reported = new Map()) {
   const runs = array(snapshot.runs).filter((run) => identifier(run?.runId));
   const agentsByRun = groupByRun(snapshot.agents, 'agentId');
   const attemptsByRun = groupByRun(snapshot.attempts, 'attemptId');
@@ -134,6 +144,17 @@ export function projectWorkflow(snapshot = {}, events = []) {
           ? { parentAgentId: event.parentAgentId } : {}),
       };
     }));
+  }
+  const modelByAgent = new Map();
+  for (const [runId, agents] of agentsByRun) {
+    const recent = new Map();
+    for (const attempt of [...(attemptsByRun.get(runId) || [])].sort(newest)) {
+      if (!recent.has(attempt.agentId)) recent.set(attempt.agentId, attempt);
+    }
+    for (const agent of agents) {
+      const attempt = recent.get(agent.agentId);
+      modelByAgent.set(agent, modelName(agent, attempt && reported.get(runId + '/' + attempt.attemptId)));
+    }
   }
   const projected = visibleRuns.map((run) => {
     const id = run.runId;
@@ -187,22 +208,36 @@ export function projectWorkflow(snapshot = {}, events = []) {
         && (run.execution?.terminalLeadRequested === true || agents.some((a) => a.role === 'lead')),
       details: [{ label: 'Decision authority', value: identifier(run.execution?.leadApprovalRunId) ? 'Lead approved for this run' : 'Human approval by default' }],
     });
+    const owner = run.execution?.leadOwnerRunId || id;
+    const roleModel = (runId, role) => {
+      const matches = (agentsByRun.get(runId) || []).filter(agent => agent.role === role);
+      return matches.length === 1 ? modelByAgent.get(matches[0]) : null;
+    };
     // Reserve decisions first, then active agents and recent attempts.
     for (const gate of gates) {
       const kind = typed(gate.kind);
       const awaitingLead = gate.status === 'pending' && leadApproved && ['plan', 'integrate'].includes(kind);
       const sha = kind === 'integrate' && gate.status === 'approved' && gitObjectId(gate.sha);
+      const actor = decisionActor(gate.resolvedBy, gate.leadDecision);
+      const settled = ['approved', 'denied'].includes(gate.status);
+      const outcome = settled && gate.resolvedBy
+        ? `${gate.status === 'approved' ? 'Approved' : 'Denied'} ${actor === 'Lead' ? 'by the lead' : actor === 'Human' ? 'by a person' : 'through MCP'}` : null;
       add({
         id: nodeId('gate', gate.gateId),
         kind: 'gate',
         gateId: gate.gateId,
         gateKind: kind,
-        title: `${kind} decision`,
+        title: kind === 'integrate' ? 'Integration decision' : `${kind} decision`,
         awaitingLead,
-        subtitle: gate.resolvedBy ? `${decisionActor(gate.resolvedBy, gate.leadDecision)} decision`
-          : awaitingLead ? 'Waiting for the lead' : 'Decision',
+        subtitle: outcome || (gate.resolvedBy ? `${actor} decision`
+          : awaitingLead ? 'Waiting for the lead' : 'Decision'),
         status: typed(gate.status),
-        details: sha ? [{ label: 'Local commit', value: sha }] : [],
+        details: [
+          ...(sha ? [{ label: 'Local commit', value: sha }] : []),
+          ...[['Run lead', roleModel(owner, 'lead')], ['Run builder', roleModel(id, 'builder')]]
+            .filter(([, value]) => value).map(([label, value]) => ({label, value})),
+          ...(kind === 'integrate' && run.steps?.review === false ? [{ label: 'Separate reviewer', value: 'Not selected' }] : []),
+        ],
       });
       edge(nodeId('run', id), nodeId('gate', gate.gateId), 'decision', 'Decision');
     }
@@ -223,7 +258,7 @@ export function projectWorkflow(snapshot = {}, events = []) {
           status: permissionWait ? 'waiting_for_native_permission' : typed(agent.processState),
           details: [
             { label: 'Provider', value: typed(agent.provider) },
-            { label: 'Model', value: typed(agent.model) },
+            { label: 'Model', value: modelByAgent.get(agent) },
             { label: 'Stage', value: typed(agent.turnState) },
             ...(permissionWait ? [{ label: 'Native access', value: 'A required action was denied or requested. Worker-specific grant verification is unavailable; this worker cannot resume.' }] : []),
           ],

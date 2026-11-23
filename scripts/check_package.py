@@ -146,7 +146,7 @@ def main():
             f"Inventory mismatch: extra={sorted(actual-set(names))}, missing={sorted(set(names)-actual)}")
 
     viewer = {
-        "README.md", "serve.mjs", "projection.mjs", "gate-review.mjs",
+        "README.md", "serve.mjs", "projection.mjs", "gate-review.mjs", "reported-models.mjs",
         "public/app.js", "public/index.html", "public/style.css", "public/workflow-ui.mjs",
         "test/browser-decisions.test.mjs", "test/gate-review.test.mjs",
         "test/projection.test.mjs", "test/server.test.mjs",

@@ -1,3 +1,8 @@
+export function gatePresentation(node, current) {
+  if (node.status !== "pending" || current.status !== "pending") return "recorded";
+  return node.awaitingLead ? "lead" : "human";
+}
+
 export function conversationTarget(runs, currentRunId, edge, fromNode, toNode) {
   if (toNode?.workerAgentId && edge.kind === "delegation" && fromNode?.role === "lead") {
     const run = runs.find((item) => item.id === toNode.targetRunId);
